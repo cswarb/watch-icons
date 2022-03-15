@@ -5,23 +5,39 @@ const expressr = require('express');
 const router = expressr.Router();
 
 router.get('/', async (req, res) => {
-    const posts = await Watch.find();
-    res.status(200).send(posts);
+    try {
+        const allWatches = await Watch.find();
+        return res.status(200).send(allWatches);
+    } catch(err) {
+        return res.status(500).send({ error: 'Error' });
+    };
 });
 
 router.get("/watch/:id", async (req, res) => {
-    const post = await Watch.findOne({ _id : req.params.id })
-    res.send(post)
+    try {
+        const watch = await Watch.findOne({ _id: req.params.id });
+        return res.status(watch ? 200 : 404).send(watch);
+    } catch(err) {
+        return res.status(500).send({ error: 'Watch does not exist' });
+    };
 })
 
 router.get('/remove-all', async (req, res) => {
-    const removal = await Watch.deleteMany({});
-    res.status(200).send(removal);
+    try {
+        const removal = await Watch.deleteMany({});
+        return res.status(200).send(removal);
+    } catch(err) {
+        return res.status(500).send({ error: 'Failed to remove all collections' });
+    };
 });
 
 router.get('/seed', async (req, res) => {
-    const saved = await Watch.bulkSave(seed());
-    res.status(200).send(saved);
+    try {
+        const saved = await Watch.bulkSave(seed());
+        return res.status(200).send(saved);
+    } catch(err) {
+        return res.status(500).send({ error: 'Failed to seed DB' });
+    };
 });
 
 export { router };

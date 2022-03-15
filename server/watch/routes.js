@@ -43,49 +43,77 @@ var expressr = require('express');
 var router = expressr.Router();
 exports.router = router;
 router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var posts;
+    var allWatches, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, watch_model_1.Watch.find()];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, watch_model_1.Watch.find()];
             case 1:
-                posts = _a.sent();
-                res.status(200).send(posts);
+                allWatches = _a.sent();
+                return [2 /*return*/, res.status(200).send(allWatches)];
+            case 2:
+                err_1 = _a.sent();
+                return [2 /*return*/, res.status(500).send({ error: 'Error' })];
+            case 3:
+                ;
                 return [2 /*return*/];
         }
     });
 }); });
 router.get("/watch/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var post;
+    var watch, err_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, watch_model_1.Watch.findOne({ shortname: req.params.id })];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, watch_model_1.Watch.findOne({ _id: req.params.id })];
             case 1:
-                post = _a.sent();
-                res.send(post);
+                watch = _a.sent();
+                return [2 /*return*/, res.status(watch ? 200 : 404).send(watch)];
+            case 2:
+                err_2 = _a.sent();
+                return [2 /*return*/, res.status(500).send({ error: 'Watch does not exist' })];
+            case 3:
+                ;
                 return [2 /*return*/];
         }
     });
 }); });
 router.get('/remove-all', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var removal;
+    var removal, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, watch_model_1.Watch.deleteMany({})];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, watch_model_1.Watch.deleteMany({})];
             case 1:
                 removal = _a.sent();
-                res.status(200).send(removal);
+                return [2 /*return*/, res.status(200).send(removal)];
+            case 2:
+                err_3 = _a.sent();
+                return [2 /*return*/, res.status(500).send({ error: 'Failed to remove all collections' })];
+            case 3:
+                ;
                 return [2 /*return*/];
         }
     });
 }); });
 router.get('/seed', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var saved;
+    var saved, err_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0: return [4 /*yield*/, watch_model_1.Watch.bulkSave((0, hydrate_db_1.WATCH_DB_FIXTURE)())];
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, watch_model_1.Watch.bulkSave((0, hydrate_db_1.WATCH_DB_FIXTURE)())];
             case 1:
                 saved = _a.sent();
-                res.status(200).send(saved);
+                return [2 /*return*/, res.status(200).send(saved)];
+            case 2:
+                err_4 = _a.sent();
+                return [2 /*return*/, res.status(500).send({ error: 'Failed to seed DB' })];
+            case 3:
+                ;
                 return [2 /*return*/];
         }
     });
