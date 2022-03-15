@@ -1,4 +1,4 @@
-import { Environment, graphql, loadQuery, RelayEnvironmentProvider, usePreloadedQuery, useRelayEnvironment } from "react-relay";
+// import { Environment, graphql, loadQuery, RelayEnvironmentProvider, usePreloadedQuery, useRelayEnvironment } from "react-relay";
 import { Fragment } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -9,27 +9,27 @@ export const StyledSection = styled.div`
 `;
 
 
-const artistsQuery = graphql`
-  query ArtistQuery($artistID: String!) {
-    artist(id: $artistID) {
-      name
-      ...ArtistDescription_artist
-    }
-  }
-`;
+// const artistsQuery = graphql`
+//   query ArtistQuery($artistID: String!) {
+//     artist(id: $artistID) {
+//       name
+//       ...ArtistDescription_artist
+//     }
+//   }
+// `;
 
 export const Watch = (props: any) => {
     const { watchId } = useParams();
-    const environment = useRelayEnvironment();
-    const artistsQueryReference = loadQuery(
-        environment,
-        artistsQuery,
-        { artistId: "1" }
-    );
-    const data = usePreloadedQuery(artistsQuery, artistsQueryReference);
+    // const environment = useRelayEnvironment();
+    // const artistsQueryReference = loadQuery(
+    //     environment,
+    //     artistsQuery,
+    //     { artistId: "1" }
+    // );
+    // const data = usePreloadedQuery(artistsQuery, artistsQueryReference);
 
     return (
-        <Fragment>
+        <>
             <WithDynamicBackground>
                 <div style={{
                     textAlign: 'center',
@@ -57,7 +57,7 @@ export const Watch = (props: any) => {
                     Price over time
                 </h2>
             </StyledSection>
-        </Fragment>
+        </>
     )
 }
 

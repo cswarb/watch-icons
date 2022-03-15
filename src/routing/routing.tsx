@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { WithAppLoader } from '../app-loader/AppLoader';
 import { Home } from "../home/Home"
 import { Library } from "../Library/Library"
 import { Nav } from '../nav/Nav';
@@ -20,3 +21,4 @@ export const Routing = () => {
     )
 }
 
+export const RoutingWithAppLoader = WithAppLoader(Routing);

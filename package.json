@@ -12,6 +12,7 @@
     "@types/react-dom": "^17.0.13",
     "apollo-server-core": "^3.6.4",
     "apollo-server-express": "^3.6.4",
+    "classnames": "^2.3.1",
     "d3": "^7.3.0",
     "dotenv": "^16.0.0",
     "express": "^4.17.3",

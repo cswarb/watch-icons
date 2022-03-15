@@ -14,14 +14,14 @@ export const WithDynamicBackground = (props: any) => {
 
     return (
         <TransitionGroup>
-            <CSSTransition key={state?.background}
-                classNames="fade"
-                timeout={1000}>
-                <StyledDynamicBackground style={{
+            <CSSTransition key={ state?.background }
+                classNames="app-transition--fade"
+                timeout={ 1000 }>
+                <StyledDynamicBackground className="app-transition--fade" style={{
                     background: `linear-gradient(${state?.background} 70%, #ffffff)`,
                     color: `${state?.color}`
                 }}>
-                    {props.children}
+                    { props.children }
                 </StyledDynamicBackground>
             </CSSTransition >
         </TransitionGroup >

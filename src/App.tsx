@@ -1,24 +1,30 @@
 import { RelayEnvironmentProvider } from 'react-relay';
 import styled from 'styled-components';
+import { AppLoader, WithAppLoader } from './app-loader/AppLoader';
+import { LoadingState } from './app-loader/model';
 import './App.css';
-import { Routing } from './routing/routing';
+import { Routing, RoutingWithAppLoader } from './routing/routing';
 
-import Environment from './createRelayEnvironment';
+// import Environment from './createRelayEnvironment';
 
 const StyledContainer = styled.div`
     margin: 0 32px;
     font-family: sans-serif;
+    overflow: hidden;
+    position: relative;
+    display: block;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
 `;
 
 function App() {
-  const pth = window.location.pathname;
-
   return (
-    <RelayEnvironmentProvider environment={Environment}>
+    // <RelayEnvironmentProvider environment={Environment}>
       <StyledContainer>
-        <Routing />
+        <RoutingWithAppLoader loaderState={ LoadingState.LOADING } />
       </StyledContainer>
-    </RelayEnvironmentProvider>
+    // </RelayEnvironmentProvider>
 
   )
 }
