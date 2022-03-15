@@ -12,6 +12,7 @@ var watchPriceSchema = new mongoose.Schema({
 exports.watchSchema = new mongoose.Schema({
     make: String,
     model: String,
+    shortname: String,
     breakdown: [watchBreakdownSchema],
     noteableModels: [String],
     price: watchPriceSchema

@@ -12,7 +12,8 @@ const watchPriceSchema = new mongoose.Schema({
 export const watchSchema = new mongoose.Schema({
     make: String,
     model: String,
-    breakdown: [watchBreakdownSchema],
-    noteableModels: [String],
+    shortname: String,
+    breakdown: [ watchBreakdownSchema ],
+    noteableModels: [ String ],
     price: watchPriceSchema,
 });

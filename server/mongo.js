@@ -9,6 +9,7 @@ mongoose
     .connect("mongodb://".concat(process.env.MONGO_HOST, ":").concat(process.env.MONGO_PORT, "/").concat(process.env.MONGO_DB))
     .then(function () {
     var app = express();
+    app.use(express.json());
     app.use('/api', routes_1.router);
     app.listen(process.env.API_PORT, function () {
         console.log('Server has started');

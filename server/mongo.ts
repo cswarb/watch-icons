@@ -9,6 +9,7 @@ mongoose
     .connect(`mongodb://${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DB}`)
     .then(() => {
         const app = express();
+        app.use(express.json());
         app.use('/api', routes);
 
         app.listen(process.env.API_PORT, () => {

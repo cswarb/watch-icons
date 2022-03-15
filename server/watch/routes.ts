@@ -9,6 +9,11 @@ router.get('/', async (req, res) => {
     res.status(200).send(posts);
 });
 
+router.get("/watch/:id", async (req, res) => {
+    const post = await Watch.findOne({ _id : req.params.id })
+    res.send(post)
+})
+
 router.get('/remove-all', async (req, res) => {
     const removal = await Watch.deleteMany({});
     res.status(200).send(removal);

@@ -4,6 +4,7 @@ const WATCH_DB_FIXTURE = () => {
     const ro = new Watch({
         make: 'Audemars Piguet', 
         model: 'Royal Oak 15202', 
+        shortname: 'jumbo',
         breakdown: [
             {
                 description: 'good description'
@@ -18,6 +19,7 @@ const WATCH_DB_FIXTURE = () => {
     const lange = new Watch({
         make: 'A Lange & Sohne',
         model: 'Zeitwerk',
+        shortname: 'zeitwerk',
         breakdown: [
             {
                 description: 'good description'

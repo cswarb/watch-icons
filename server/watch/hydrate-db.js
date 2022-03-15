@@ -6,6 +6,7 @@ var WATCH_DB_FIXTURE = function () {
     var ro = new watch_model_1.Watch({
         make: 'Audemars Piguet',
         model: 'Royal Oak 15202',
+        shortname: 'jumbo',
         breakdown: [
             {
                 description: 'good description'
@@ -20,6 +21,7 @@ var WATCH_DB_FIXTURE = function () {
     var lange = new watch_model_1.Watch({
         make: 'A Lange & Sohne',
         model: 'Zeitwerk',
+        shortname: 'zeitwerk',
         breakdown: [
             {
                 description: 'good description'

@@ -54,6 +54,18 @@ router.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0, f
         }
     });
 }); });
+router.get("/watch/:id", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var post;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0: return [4 /*yield*/, watch_model_1.Watch.findOne({ shortname: req.params.id })];
+            case 1:
+                post = _a.sent();
+                res.send(post);
+                return [2 /*return*/];
+        }
+    });
+}); });
 router.get('/remove-all', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var removal;
     return __generator(this, function (_a) {
