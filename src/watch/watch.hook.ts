@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export interface Watch {
+export interface WatchData {
     breakdown: Array<{ description: string, _id: string }>;
     make: string;
     model: string;
@@ -15,14 +15,14 @@ export interface Watch {
 }
 
 export function useWatch(watchId: string | undefined) {
-    const [watchState, setWatchState] = useState<Watch | null>(null);
+    const [watchState, setWatchState] = useState<WatchData | null>(null);
 
     useEffect(() => {
-        fetch(`http://localhost:3030/api/watches/watch/${watchId}`, {
+        fetch(`//localhost:3030/api/watches/watch/${watchId}`, {
             method: 'GET'
         })
         .then(res => res.json())
-        .then((res: Watch) => {
+        .then((res: WatchData) => {
             setWatchState(res);
         })
         .catch((err) => {

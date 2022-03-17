@@ -8,40 +8,39 @@ import { IconBreakdown } from './icon-breakdown/IconBreakdown';
 import { BrandLogo } from './logo/BrandLogo';
 import { NoteableModels } from './noteable-models/NoteableModels';
 import { PriceOverTime } from './price-over-time/PriceOverTime';
-import { useWatch } from './watch.hook';
+import { WatchData } from './watch.hook';
 
 export const StyledSection = styled.div`
     margin-top: 48px;
 `;
 
-export const Watch = (props: any) => {
-    const { watchId } = useParams();
-    const watchData = useWatch(watchId?.toString());
+export const Watch = ({ watch }: { watch: WatchData}) => {
+    return (
+        watch && (
+            <>
+                <WithDynamicBackground>
+                    <div style={{
+                        textAlign: 'center',
+                        marginBottom: '10rem'
+                    }}>
+                        <BrandLogo />
+                        <WatchName watchName={watch.model} />
 
-    return !watchData ?
-    <Spinner /> : 
-    <>
-        <WithDynamicBackground>
-            <div style={{
-                textAlign: 'center',
-                marginBottom: '10rem'
-            }}>
-                <BrandLogo />
-                <WatchName watchName={watchData.model} />
+                        <RenderWatchAnimation watchId={watch.shortname} />
+                    </div>
+                </WithDynamicBackground>
 
-                <RenderWatchAnimation watchId={watchData.shortname} />
-            </div>
-        </WithDynamicBackground>
+                <StyledSection>
+                    <IconBreakdown breakdown={watch.breakdown} />
 
-        <StyledSection>
-            <IconBreakdown breakdown={watchData.breakdown} />
+                    <NoteableModels models={watch.noteableModels} />
 
-            <NoteableModels models={watchData.noteableModels} />
-
-            <PriceOverTime price={watchData.price} />
-        </StyledSection>
-    </>
-}
+                    <PriceOverTime price={watch.price} />
+                </StyledSection>
+            </>
+        )
+    )
+};
 
 const StyledWatchName = styled.h1`
     font-size: 2rem;

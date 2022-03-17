@@ -1,7 +1,6 @@
-import { Fragment } from "react"
-import styled from "styled-components";
-import { Grid, GridItem } from "../shared/grid/Grid";
-import { WithPageContainer } from "../shared/page-container/PageContainer";
+import styled from 'styled-components';
+import { Grid, GridItem } from '../shared/grid/Grid';
+import { WithPageContainer } from '../shared/page-container/PageContainer';
 
 const StyledHeading = styled.h2`
         margin: 0;
@@ -12,8 +11,9 @@ const StyledParagraph = styled.p`
     `;
 
 export const Library = (props: any) => {
-    return (<Fragment>
-        <p>Technical library page
+    return (
+        <>
+            <p>Technical library page
             Showcase of working parts of watch
             Animated with descriptions</p>
 
@@ -91,7 +91,7 @@ export const Library = (props: any) => {
                         iure veniam ad voluptatem.</StyledParagraph>
                 </GridItem>
             </Grid>
-        </Fragment>
+        </>
     )
 }
 

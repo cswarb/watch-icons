@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { WithAppLoader } from '../app-loader/AppLoader';
-import { Home, HomeWithPageContainer } from "../home/Home"
-import { Library, LibraryWithPageContainer } from "../library/Library"
+import { HomeContainerWithPageContainer } from '../home/HomeContainer';
+import { LibraryContainerWithPageContainer } from '../library/LibraryContainer';
 import { Nav } from '../nav/Nav';
-import { Watch, WatchWithPageContainer } from "../watch/Watch"
+import { WatchContainerWithPageContainer } from '../watch/WatchContainer';
 
 export const Routing = () => {
     return (
@@ -11,9 +11,9 @@ export const Routing = () => {
             <Nav />
 
             <Routes>
-                <Route path="/" element={<HomeWithPageContainer />}></Route>
-                <Route path="/watch/:watchId" element={<WatchWithPageContainer />}></Route>
-                <Route path="/library" element={<LibraryWithPageContainer />}></Route>
+                <Route path="/" element={<HomeContainerWithPageContainer />}></Route>
+                <Route path="/watch/:watchId" element={<WatchContainerWithPageContainer />}></Route>
+                <Route path="/library" element={<LibraryContainerWithPageContainer />}></Route>
                 <Route path="*" element={<Navigate replace to="/" />}></Route>
             </Routes>
         </Router>

@@ -1,14 +1,12 @@
 import { Link } from 'react-router-dom';
 import { WithPageContainer } from '../shared/page-container/PageContainer';
-import { useWatchListing } from './watch-list.hook';
+import { WatchData } from '../watch/watch.hook';
 
-export const Home = (props: any) => {
-    const watchState = useWatchListing();
-
-    const list = watchState.map((item) => { 
+export const Home = ({ data }: { data: Array<WatchData>}) => {
+    const list = data.map((item) => { 
         return (
-            <li>
-                <Link key={item._id} 
+            <li key={item._id}>
+                <Link 
                     className="nav__anchor"
                     to={`/watch/${item._id}`}
                     state={{ background: 'black', color: 'white' }}>
