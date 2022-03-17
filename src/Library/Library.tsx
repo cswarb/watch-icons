@@ -1,6 +1,7 @@
 import { Fragment } from "react"
 import styled from "styled-components";
-import { Grid, GridItem } from "../grid/Grid";
+import { Grid, GridItem } from "../shared/grid/Grid";
+import { WithPageContainer } from "../shared/page-container/PageContainer";
 
 const StyledHeading = styled.h2`
         margin: 0;
@@ -93,3 +94,5 @@ export const Library = (props: any) => {
         </Fragment>
     )
 }
+
+export const LibraryWithPageContainer = WithPageContainer(Library);

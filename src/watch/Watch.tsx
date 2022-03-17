@@ -1,9 +1,13 @@
-// import { Environment, graphql, loadQuery, RelayEnvironmentProvider, usePreloadedQuery, useRelayEnvironment } from "react-relay";
-import { Fragment, Suspense, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { WithDynamicBackground } from '../dynamic-background/DynamicBackground';
-import { Spinner } from '../spinner/spinner';
+import { WithDynamicBackground } from '../shared/dynamic-background/DynamicBackground';
+import { WithPageContainer } from '../shared/page-container/PageContainer';
+import { Spinner } from '../shared/spinner/spinner';
+import { RenderWatchAnimation } from './animations/animations';
+import { IconBreakdown } from './icon-breakdown/IconBreakdown';
+import { BrandLogo } from './logo/BrandLogo';
+import { NoteableModels } from './noteable-models/NoteableModels';
+import { PriceOverTime } from './price-over-time/PriceOverTime';
 import { useWatch } from './watch.hook';
 
 export const StyledSection = styled.div`
@@ -12,7 +16,6 @@ export const StyledSection = styled.div`
 
 export const Watch = (props: any) => {
     const { watchId } = useParams();
-    const [ state, setState ] = useState(0);
     const watchData = useWatch(watchId?.toString());
 
     return !watchData ?
@@ -26,26 +29,16 @@ export const Watch = (props: any) => {
                 <BrandLogo />
                 <WatchName watchName={watchData.model} />
 
-                <h2>
-                    {state} - D3 Animation
-                </h2>
-
-                <button onClick={() => setState(state + 1)}>Test state update</button>
+                <RenderWatchAnimation watchId={watchData.shortname} />
             </div>
         </WithDynamicBackground>
 
         <StyledSection>
-            <h2>
-                Breakdown of why it is iconic
-            </h2>
+            <IconBreakdown breakdown={watchData.breakdown} />
 
-            <h2>
-                Noteable models in the series
-            </h2>
+            <NoteableModels models={watchData.noteableModels} />
 
-            <h2>
-                Price over time
-            </h2>
+            <PriceOverTime price={watchData.price} />
         </StyledSection>
     </>
 }
@@ -62,11 +55,5 @@ export const WatchName = (props: any) => {
     )
 }
 
-export const BrandLogo = (props: any) => {
-    return (
-        <img style={{
-            maxWidth: '150px',
-            marginBottom: '8px'
-        }} src="/img/als.svg" />
-    )
-}
+
+export const WatchWithPageContainer = WithPageContainer(Watch);

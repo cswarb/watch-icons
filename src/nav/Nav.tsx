@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { useWatchListing } from '../home/watch-list.hook';
-import { ThemeContext, Themes } from '../theme/theme.context';
+import { ThemeContext, Themes } from '../contexts/theme.context';
 
 const StyledNav = styled.nav`
 
@@ -11,12 +11,12 @@ const StyledNav = styled.nav`
 
 const StyledUl = styled.ul`
         display: flex;
-        margin: 16px 0 32px 0;
+        margin: 2rem;
         padding: 0;
     `;
 
 const StyledLi = styled.li`
-        margin: 0 32px;
+        margin: 0 2rem;
         list-style: none;
 
         &:first-of-type {

@@ -1,22 +1,19 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { WithAppLoader } from '../app-loader/AppLoader';
-import { Home } from "../home/Home"
-import { Library } from "../Library/Library"
+import { Home, HomeWithPageContainer } from "../home/Home"
+import { Library, LibraryWithPageContainer } from "../library/Library"
 import { Nav } from '../nav/Nav';
-import { Watch } from "../watch/Watch"
-// import { NoMatch } from './NoMatch';
+import { Watch, WatchWithPageContainer } from "../watch/Watch"
 
 export const Routing = () => {
-    console.log('routing');
-    
     return (
         <Router>
             <Nav />
 
             <Routes>
-                <Route path="/" element={<Home />}></Route>
-                <Route path="/watch/:watchId" element={<Watch />}></Route>
-                <Route path="/library" element={<Library />}></Route>
+                <Route path="/" element={<HomeWithPageContainer />}></Route>
+                <Route path="/watch/:watchId" element={<WatchWithPageContainer />}></Route>
+                <Route path="/library" element={<LibraryWithPageContainer />}></Route>
                 <Route path="*" element={<Navigate replace to="/" />}></Route>
             </Routes>
         </Router>

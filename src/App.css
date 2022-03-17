@@ -1,5 +1,9 @@
 /**/
 
+.in-page-container {
+    margin: 0 2rem;
+}
+
 .app-transition--fade {
     transition: all 0.25s ease-in-out;
 }
