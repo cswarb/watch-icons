@@ -1,5 +1,9 @@
-import { Link } from "react-router-dom"
-import styled from "styled-components";
+import React from 'react';
+import { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import { useWatchListing } from '../home/watch-list.hook';
+import { ThemeContext, Themes } from '../theme/theme.context';
 
 const StyledNav = styled.nav`
 
@@ -25,26 +29,34 @@ const StyledLi = styled.li`
     `;
 
 export const Nav = () => {
+    const theme = useContext(ThemeContext);
+    const watches = useWatchListing();
+    
+    const watchList = watches.map((watch) => {
+        return (
+            <StyledLi key={watch._id}>
+                <Link className="nav__anchor"
+                    to={`/watch/${watch._id}`}
+                    state={{ background: 'black', color: 'white' }}>{watch.model}</Link>
+            </StyledLi>
+        )
+    });
+
     return (
-        <StyledNav>
-            <StyledUl>
-                <StyledLi>
-                    <Link className="nav__anchor" to="/">Home</Link>
-                </StyledLi>
-                <StyledLi>
-                    <Link className="nav__anchor"
-                        to={"/watch/zeitwerk"}
-                        state={{ background: 'black', color: 'white' }}>Zeitwerk</Link>
-                </StyledLi>
-                <StyledLi>
-                    <Link className="nav__anchor"
-                        to={"/watch/submariner"}
-                        state={{ background: '#12784a', color: 'white' }}>Submariner</Link>
-                </StyledLi>
-                <StyledLi>
-                    <Link className="nav__anchor" to="/library">Library</Link>
-                </StyledLi>
-            </StyledUl>
-        </StyledNav>
+        <ThemeContext.Provider value={ Themes().default }>
+            <StyledNav>
+                <StyledUl>
+                    <StyledLi>
+                        <Link className="nav__anchor" to="/">Home</Link>
+                    </StyledLi>
+
+                    {watchList}
+                
+                    <StyledLi>
+                        <Link className="nav__anchor" to="/library">Library</Link>
+                    </StyledLi>
+                </StyledUl>
+            </StyledNav>
+        </ThemeContext.Provider>
     )
 }

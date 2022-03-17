@@ -7,6 +7,8 @@ import { Watch } from "../watch/Watch"
 // import { NoMatch } from './NoMatch';
 
 export const Routing = () => {
+    console.log('routing');
+    
     return (
         <Router>
             <Nav />
