@@ -1,11 +1,10 @@
 import styled from 'styled-components';
-import { debug } from '../shared/debug/debug';
 import { WithDynamicBackground } from '../shared/dynamic-background/DynamicBackground';
 import { WithPageContainer } from '../shared/page-container/PageContainer';
 import { WatchReducerWatch } from '../store/watch/reducer';
-import { RenderWatchAnimation } from './animations/animations';
+import { WatchAnimationFactory } from './animations/animations';
 import { IconBreakdown } from './icon-breakdown/IconBreakdown';
-import { BrandLogo } from './logo/BrandLogo';
+import { WatchBrandFactory } from './logo/brands';
 import { NoteableModels } from './noteable-models/NoteableModels';
 import { PriceOverTime } from './price-over-time/PriceOverTime';
 
@@ -22,17 +21,17 @@ export const Watch = ({ watch }: { watch: WatchReducerWatch}) => {
                         textAlign: 'center',
                         marginBottom: '10rem'
                     }}>
-                        <BrandLogo />
+                        <WatchBrandFactory make={watch.make} />
                         <WatchName watchName={watch.model} />
 
-                        <RenderWatchAnimation watchId={watch.shortname} />
+                        <WatchAnimationFactory model={watch.model} />
                     </div>
                 </WithDynamicBackground>
 
                 <StyledSection>
                     <IconBreakdown breakdownIds={watch.breakdownIds} />
 
-                    <NoteableModels models={watch.noteableModels} />
+                    <NoteableModels modelIds={watch.noteableModelIds} />
 
                     <PriceOverTime priceId={watch.priceId} />
                 </StyledSection>

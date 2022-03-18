@@ -13,6 +13,10 @@ export const selectWatches = createSelector(selectRootWatches, (state) => {
     return state.watches;
 });
 
+export const selectNoteableModels = createSelector(selectRootWatches, (state) => {
+    return state.noteableModels;
+});
+
 export const selectBreakdowns = createSelector(selectRootWatches, (state) => {
     return state.breakdowns;
 });
@@ -45,6 +49,14 @@ export const selectWatchesById = createSelector(selectWatches, (watches) => {
     return watches.byId;
 });
 
+export const selectAllNoteableModelIds = createSelector(selectNoteableModels, (watches) => {
+    return watches.allIds;
+});
+
+export const selectNoteableModelsById = createSelector(selectNoteableModels, (watches) => {
+    return watches.byId;
+});
+
 export const selectWatchById: any = createSelector(
     selectWatchesById,
     (state: any, watchId: string) => watchId,
@@ -66,5 +78,13 @@ export const selectDerivedBreakdownsById: any = createSelector(
     (state: any, breakdownIds: Array<string>) => breakdownIds,
     (breakdowns, breakdownIds) => {
         return breakdownIds.map(b => breakdowns.get(b));
+    }
+);
+
+export const selectDerivedNoteableModelsById: any = createSelector(
+    selectNoteableModelsById,
+    (state: any, modelIds: Array<string>) => modelIds,
+    (breakdowns, modelIds) => {
+        return modelIds.map(b => breakdowns.get(b));
     }
 );

@@ -1,28 +1,15 @@
 import { useState, useEffect } from 'react';
-
-export interface WatchData {
-    breakdowns: Array<{ description: string, _id: string }>;
-    make: string;
-    model: string;
-    noteableModels: Array<string>;
-    price: { 
-        from: string, 
-        to: string, 
-        _id: string
-    }
-    shortname: string;
-    _id: string;
-}
+import { WatchResponse } from '../store/domain/watch.domain';
 
 export function useWatch(watchId: string | undefined) {
-    const [watchState, setWatchState] = useState<WatchData | null>(null);
+    const [watchState, setWatchState] = useState<WatchResponse | null>(null);
 
     useEffect(() => {
         fetch(`//localhost:3030/api/watches/watch/${watchId}`, {
             method: 'GET'
         })
         .then(res => res.json())
-        .then((res: WatchData) => {
+        .then((res: WatchResponse) => {
             setWatchState(res);
         })
         .catch((err) => {

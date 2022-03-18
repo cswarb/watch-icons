@@ -7,16 +7,25 @@ const WATCH_DB_FIXTURE = () => {
         shortname: 'jumbo',
         breakdown: [
             {
+                title: 'Breakdown title',
                 description: 'good description 1'
             },
             {
+                title: 'Breakdown title',
                 description: 'good description 2'
             },
             {
+                title: 'Breakdown title',
                 description: 'good description 3'
             }
         ],
-        noteableModels: ['2017'],
+        noteableModels: [
+            {
+                title: '2017 Jumbo',
+                date: new Date(),
+                description: 'Updated dial colour',
+            }
+        ],
         price: {
             from: '0',
             to: '100',
@@ -28,10 +37,30 @@ const WATCH_DB_FIXTURE = () => {
         shortname: 'zeitwerk',
         breakdown: [
             {
-                description: 'good description 4'
+                title: 'Breakdown title',
+                description: 'good description 1'
+            },
+            {
+                title: 'Breakdown title',
+                description: 'good description 2'
+            },
+            {
+                title: 'Breakdown title',
+                description: 'good description 3'
             }
         ],
-        noteableModels: ['Lumen'],
+        noteableModels: [
+            {
+                title: 'Lumen',
+                date: new Date(),
+                description: 'Smoked sapphire + luminous numerals',
+            },
+            {
+                title: 'Date',
+                date: new Date(),
+                description: 'Outer date ring with quick set pusher',
+            }
+        ],
         price: {
             from: '0',
             to: '1000',
@@ -41,4 +70,13 @@ const WATCH_DB_FIXTURE = () => {
     return [ro, lange];
 };
 
-export { WATCH_DB_FIXTURE };
+const up = async () => {
+    const removal = await Watch.deleteMany({});
+    const saved = await Watch.bulkSave(WATCH_DB_FIXTURE());
+}
+
+const down = async () => {
+    const removal = await Watch.deleteMany({});
+}
+
+export { up, down };

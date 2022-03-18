@@ -4,11 +4,11 @@ import { JumboAnimation } from './Jumbo';
 import { LangeAnimation } from './Lange';
 
 export const WATCH_ANIMATIONS = Map <string, any>()
-    .set('zeitwerk', LangeAnimation)
-    .set('jumbo', JumboAnimation);
+    .set('Zeitwerk', LangeAnimation)
+    .set('Royal Oak 15202', JumboAnimation);
 
-export const RenderWatchAnimation = (props: { watchId: string }) => {
-    const WatchAnimation = WATCH_ANIMATIONS.get(props.watchId) || FallbackAnimation;
+export const WatchAnimationFactory = ({ model, ...props }: { model: string }) => {
+    const WatchAnimation = WATCH_ANIMATIONS.get(model) || FallbackAnimation;
 
     return (
         <WatchAnimation {...props} />

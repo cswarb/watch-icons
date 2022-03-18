@@ -37,7 +37,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 exports.__esModule = true;
 exports.router = void 0;
-var hydrate_db_1 = require("./hydrate-db");
 var watch_model_1 = require("./watch.model");
 var expressr = require('express');
 var router = expressr.Router();
@@ -74,44 +73,6 @@ router.get("/watch/:id", function (req, res) { return __awaiter(void 0, void 0, 
             case 2:
                 err_2 = _a.sent();
                 return [2 /*return*/, res.status(500).send({ error: 'Watch does not exist' })];
-            case 3:
-                ;
-                return [2 /*return*/];
-        }
-    });
-}); });
-router.get('/remove-all', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var removal, err_3;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, watch_model_1.Watch.deleteMany({})];
-            case 1:
-                removal = _a.sent();
-                return [2 /*return*/, res.status(200).send(removal)];
-            case 2:
-                err_3 = _a.sent();
-                return [2 /*return*/, res.status(500).send({ error: 'Failed to remove all collections' })];
-            case 3:
-                ;
-                return [2 /*return*/];
-        }
-    });
-}); });
-router.get('/seed', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var saved, err_4;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, watch_model_1.Watch.bulkSave((0, hydrate_db_1.WATCH_DB_FIXTURE)())];
-            case 1:
-                saved = _a.sent();
-                return [2 /*return*/, res.status(200).send(saved)];
-            case 2:
-                err_4 = _a.sent();
-                return [2 /*return*/, res.status(500).send({ error: 'Failed to seed DB' })];
             case 3:
                 ;
                 return [2 /*return*/];
