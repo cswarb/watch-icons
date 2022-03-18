@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 export interface WatchData {
-    breakdown: Array<{ description: string, _id: string }>;
+    breakdowns: Array<{ description: string, _id: string }>;
     make: string;
     model: string;
     noteableModels: Array<string>;

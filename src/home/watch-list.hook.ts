@@ -1,21 +1,11 @@
-import { useState, useEffect } from 'react';
-import { WatchData } from '../watch/watch.hook';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchAllWatches } from '../store/watch/thunk';
 
 export function useWatchListing() {
-    const [watchState, setWatchState] = useState<Array<WatchData>>([]);
-
+    const dispatch = useDispatch();
+    
     useEffect(() => {
-        fetch('//localhost:3030/api/watches', {
-            method: 'GET'
-        })
-        .then(res => res.json())
-        .then((res: Array<WatchData>) => {
-            setWatchState(res);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+        dispatch(fetchAllWatches);
     }, []);
-
-    return watchState;
 };

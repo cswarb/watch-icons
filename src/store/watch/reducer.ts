@@ -1,4 +1,4 @@
-import { getAllWatches, getAllWatchesAction, getAllWatchesError, getAllWatchesSuccess, getWatch, getWatchAction } from './actions';
+import { getAllWatches, getAllWatchesError, getAllWatchesSuccess } from './actions';
 import { Map } from 'immutable';
 
 export enum ServiceStatus {
@@ -14,11 +14,11 @@ export interface WatchReducer {
         byId: Map<string, WatchReducerWatch>;
         allIds: Array<string>;
     },
-    breakdown: {
+    breakdowns: {
         byId: Map<string, WatchReducerBreakdown>;
         allIds: Array<string>;
     },
-    price: {
+    prices: {
         byId: Map<string, WatchReducerPrice>;
         allIds: Array<string>;
     },
@@ -30,8 +30,8 @@ export interface WatchReducerWatch {
     model: string;
     noteableModels: Array<string>;
     shortname: string;
-    breakdowns: Array<string>;
-    price: string;
+    breakdownIds: Array<string>;
+    priceId: string;
 }
 
 export interface WatchReducerBreakdown {
@@ -51,11 +51,11 @@ const defaultState = {
         byId: Map<string, WatchReducerWatch>(),
         allIds: []
     },
-    breakdown: {
+    breakdowns: {
         byId: Map<string, WatchReducerBreakdown>(),
         allIds: []
     },
-    price: {
+    prices: {
         byId: Map<string, WatchReducerPrice>(),
         allIds: []
     }
@@ -79,14 +79,14 @@ export function watchReducer(state = defaultState, action: any) {
                         const { breakdown, price, ...watch } = w;
                         const g = {
                             ...watch,
-                            breakdowns: breakdown.map((b: any) => b._id),
-                            price: price._id
+                            breakdownIds: breakdown.map((b: any) => b._id),
+                            priceId: price._id
                         }
                         return acc.set(w._id, g);
                     }, Map()),
                     allIds: response.map((w: any) => w._id)
                 },
-                breakdown: {
+                breakdowns: {
                     byId: response.reduce((acc: Map<any, any>, w: any) => {
                         const brkdwn = w.breakdown.reduce((acc2: any, b: any) => {
                             return acc2.set(b._id, b);
@@ -95,7 +95,7 @@ export function watchReducer(state = defaultState, action: any) {
                     }, Map()),
                     allIds: response.reduce((acc: Array<string>, w: any) => acc.concat(w.breakdown.map((b: any) => b._id)), [])
                 },
-                price: {
+                prices: {
                     byId: response.reduce((acc: Map<any, any>, w: any) => {
                         return acc.set(w.price._id, w.price);
                     }, Map()),
@@ -107,10 +107,6 @@ export function watchReducer(state = defaultState, action: any) {
                 ...state,
                 status: ServiceStatus.ERROR
             }
-        case getWatch:
-            return {
-                ...state
-            };
         default:
             return state;
     };

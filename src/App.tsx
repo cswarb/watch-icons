@@ -1,12 +1,9 @@
-import { RelayEnvironmentProvider } from 'react-relay';
 import styled from 'styled-components';
-import { AppLoader, WithAppLoader } from './app-loader/AppLoader';
 import { LoadingState } from './app-loader/model';
 import './App.css';
 import { ErrorBoundary } from './shared/error/ErrorBoundary';
-import { Routing, RoutingWithAppLoader } from './routing/routing';
-
-// import Environment from './createRelayEnvironment';
+import { RoutingWithAppLoader } from './routing/routing';
+import { useWatchListing } from './home/watch-list.hook';
 
 const StyledContainer = styled.div`
     margin: 0 32px;
@@ -20,6 +17,8 @@ const StyledContainer = styled.div`
 `;
 
 function App() {
+  useWatchListing();
+  
   return (
     // <RelayEnvironmentProvider environment={Environment}>
       <StyledContainer>

@@ -1,7 +1,6 @@
 import { getAllWatches, getAllWatchesError, getAllWatchesSuccess } from './actions';
 
 //'effects'
-
 export async function fetchAllWatches(dispatch: any, getState: any) {
     dispatch({ type: getAllWatches });
 

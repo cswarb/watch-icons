@@ -1,24 +1,14 @@
-import { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { WithPageContainer } from '../shared/page-container/PageContainer';
-import { selectWatches } from '../store/watch/selectors';
-import { fetchAllWatches } from '../store/watch/thunk';
+import { Spinner } from '../shared/spinner/spinner';
+import { selectAllWatchesIds } from '../store/watch/selectors';
 import { Home } from './Home';
 
 export const HomeContainer = (props: any) => {
-    // const watchState = useWatchListing();
-    const dispatch = useDispatch();
-    const watches = useSelector(selectWatches);
-    console.log(watches);
-    
-
-    useEffect(() => {
-        dispatch(fetchAllWatches);
-    }, []);
+    const watchIds = useSelector(selectAllWatchesIds);
 
     return (
-        <>hello</>
-        // <Home {...props} data={watches} />
+        !watchIds || (watchIds && watchIds.length < 1) ? <Spinner /> : <Home {...props} watchIds={watchIds} />
     )
 }
 

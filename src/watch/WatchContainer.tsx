@@ -1,16 +1,17 @@
+import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { WithPageContainer } from '../shared/page-container/PageContainer';
 import { Spinner } from '../shared/spinner/spinner';
+import { selectWatchById } from '../store/watch/selectors';
 import { Watch } from './Watch';
-import { useWatch } from './watch.hook';
 
 export const WatchContainer = (props: any) => {
     const { watchId } = useParams();
-    const watchData = useWatch(watchId?.toString());
+    const watch = useSelector(state => selectWatchById(state, watchId));
 
-    return !watchData ? <Spinner /> : 
+    return !watch ? <Spinner /> : 
     <>
-        <Watch {...props} watch={watchData}/>
+        <Watch {...props} watch={watch}/>
     </>
 }
 

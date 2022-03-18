@@ -1,20 +1,19 @@
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
+import { debug } from '../shared/debug/debug';
 import { WithDynamicBackground } from '../shared/dynamic-background/DynamicBackground';
 import { WithPageContainer } from '../shared/page-container/PageContainer';
-import { Spinner } from '../shared/spinner/spinner';
+import { WatchReducerWatch } from '../store/watch/reducer';
 import { RenderWatchAnimation } from './animations/animations';
 import { IconBreakdown } from './icon-breakdown/IconBreakdown';
 import { BrandLogo } from './logo/BrandLogo';
 import { NoteableModels } from './noteable-models/NoteableModels';
 import { PriceOverTime } from './price-over-time/PriceOverTime';
-import { WatchData } from './watch.hook';
 
 export const StyledSection = styled.div`
     margin-top: 48px;
 `;
 
-export const Watch = ({ watch }: { watch: WatchData}) => {
+export const Watch = ({ watch }: { watch: WatchReducerWatch}) => {
     return (
         watch && (
             <>
@@ -31,11 +30,11 @@ export const Watch = ({ watch }: { watch: WatchData}) => {
                 </WithDynamicBackground>
 
                 <StyledSection>
-                    <IconBreakdown breakdown={watch.breakdown} />
+                    <IconBreakdown breakdownIds={watch.breakdownIds} />
 
                     <NoteableModels models={watch.noteableModels} />
 
-                    <PriceOverTime price={watch.price} />
+                    <PriceOverTime priceId={watch.priceId} />
                 </StyledSection>
             </>
         )

@@ -1,9 +1,9 @@
-import React from 'react';
 import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { useWatchListing } from '../home/watch-list.hook';
 import { ThemeContext, Themes } from '../contexts/theme.context';
+import { useSelector } from 'react-redux';
+import { selectAllWatchesIds, selectWatchById } from '../store/watch/selectors';
 
 const StyledNav = styled.nav`
 
@@ -28,17 +28,25 @@ const StyledLi = styled.li`
         }
     `;
 
+export const WatchLink = ({ id }: any) => {
+    const watch = useSelector(state => selectWatchById(state, id));
+    
+    return (
+        <StyledLi key={watch._id}>
+            <Link className="nav__anchor"
+                to={`/watch/${watch._id}`}
+                state={{ background: 'black', color: 'white' }}>{watch.model}</Link>
+        </StyledLi>
+    )
+};
+
 export const Nav = () => {
     const theme = useContext(ThemeContext);
-    const watches = useWatchListing();
+    const watchIds = useSelector(selectAllWatchesIds);
     
-    const watchList = watches.map((watch) => {
+    const watchList = watchIds.map((id) => {
         return (
-            <StyledLi key={watch._id}>
-                <Link className="nav__anchor"
-                    to={`/watch/${watch._id}`}
-                    state={{ background: 'black', color: 'white' }}>{watch.model}</Link>
-            </StyledLi>
+            <WatchLink key={id} id={id} />
         )
     });
 

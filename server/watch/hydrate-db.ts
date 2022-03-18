@@ -7,7 +7,13 @@ const WATCH_DB_FIXTURE = () => {
         shortname: 'jumbo',
         breakdown: [
             {
-                description: 'good description'
+                description: 'good description 1'
+            },
+            {
+                description: 'good description 2'
+            },
+            {
+                description: 'good description 3'
             }
         ],
         noteableModels: ['2017'],
@@ -22,7 +28,7 @@ const WATCH_DB_FIXTURE = () => {
         shortname: 'zeitwerk',
         breakdown: [
             {
-                description: 'good description'
+                description: 'good description 4'
             }
         ],
         noteableModels: ['Lumen'],
