@@ -9,13 +9,16 @@ export const HomeContainer = (props: any) => {
     // const watchState = useWatchListing();
     const dispatch = useDispatch();
     const watches = useSelector(selectWatches);
+    console.log(watches);
+    
 
     useEffect(() => {
         dispatch(fetchAllWatches);
     }, []);
 
     return (
-        <Home {...props} data={watches} />
+        <>hello</>
+        // <Home {...props} data={watches} />
     )
 }
 
