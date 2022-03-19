@@ -1,7 +1,9 @@
-import { useLocation as Location } from "react-router-dom";
+import { useRef } from 'react';
+import { useLocation as Location } from 'react-router-dom';
 import {
     TransitionGroup,
-    CSSTransition
+    CSSTransition,
+    SwitchTransition
 } from "react-transition-group";
 import styled from "styled-components";
 
@@ -11,19 +13,22 @@ const StyledDynamicBackground = styled.div`
 
 export const WithDynamicBackground = (props: any) => {
     const { state }: any = Location();
+    const nodeRef = useRef(null);
+    console.log('state: ', state);
 
     return (
-        <TransitionGroup>
+        <SwitchTransition>
             <CSSTransition key={ state?.background }
+                nodeRef={nodeRef}
                 classNames="app-transition--fade"
-                timeout={ 1000 }>
-                <StyledDynamicBackground className="app-transition--fade" style={{
-                    background: `linear-gradient(${state?.background} 70%, #ffffff)`,
-                    color: `${state?.color}`
+                timeout={ 500 }>
+                <StyledDynamicBackground ref={nodeRef} className="app-transition--fade" style={{
+                    background: `${state?.background || '#ffffff'}`,
+                    color: `${state?.color || '#000000'}`
                 }}>
                     { props.children }
                 </StyledDynamicBackground>
             </CSSTransition >
-        </TransitionGroup >
+        </SwitchTransition >
     )
 }

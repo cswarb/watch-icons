@@ -1,9 +1,12 @@
+import { WithDynamicBackground } from "../shared/dynamic-background/DynamicBackground";
 import { WithPageContainer } from "../shared/page-container/PageContainer";
 import { Library } from "./Library";
 
 export const LibraryContainer = (props: any) => {
     return (
-        <Library {...props} />
+        <WithDynamicBackground>
+            <Library {...props} />
+        </WithDynamicBackground>
     );
 }
 

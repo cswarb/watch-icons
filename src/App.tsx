@@ -1,9 +1,10 @@
 import styled from 'styled-components';
-import { LoadingState } from './app-loader/model';
 import './App.css';
 import { ErrorBoundary } from './shared/error/ErrorBoundary';
 import { RoutingWithAppLoader } from './routing/routing';
 import { useWatchListing } from './home/watch-list.hook';
+import { useSelector } from 'react-redux';
+import { selectStatus } from './store/watch/selectors';
 
 const StyledContainer = styled.div`
     margin: 0 32px;
@@ -18,16 +19,16 @@ const StyledContainer = styled.div`
 
 function App() {
   useWatchListing();
+  const loadingStatus = useSelector(selectStatus);
   
   return (
     // <RelayEnvironmentProvider environment={Environment}>
       <StyledContainer>
         <ErrorBoundary>
-          <RoutingWithAppLoader loaderState={ LoadingState.LOADED } />
+        <RoutingWithAppLoader loaderState={loadingStatus} />
         </ErrorBoundary>
       </StyledContainer>
     // </RelayEnvironmentProvider>
-
   )
 }
 

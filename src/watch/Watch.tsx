@@ -12,21 +12,23 @@ export const StyledSection = styled.div`
     margin-top: 48px;
 `;
 
+export const StyledSectionTitle = styled.h3`
+    font-size: 5rem;
+    margin: 0;
+`;
+
 export const Watch = ({ watch }: { watch: WatchReducerWatch}) => {
     return (
         watch && (
             <>
-                <WithDynamicBackground>
-                    <div style={{
-                        textAlign: 'center',
-                        marginBottom: '10rem'
-                    }}>
-                        <WatchBrandFactory make={watch.make} />
-                        <WatchName watchName={watch.model} />
+                <div style={{
+                    textAlign: 'center',
+                }}>
+                    <WatchBrandFactory make={watch.make} />
+                    <WatchName watchName={watch.model} />
 
-                        <WatchAnimationFactory model={watch.model} />
-                    </div>
-                </WithDynamicBackground>
+                    <WatchAnimationFactory model={watch.model} />
+                </div>
 
                 <StyledSection>
                     <IconBreakdown breakdownIds={watch.breakdownIds} />
@@ -41,9 +43,11 @@ export const Watch = ({ watch }: { watch: WatchReducerWatch}) => {
 };
 
 const StyledWatchName = styled.h1`
-    font-size: 2rem;
+    font-size: 16rem;
     margin: 0;
+    line-height: 1.3;
 `;
+
 export const WatchName = (props: any) => {
     const watchName = props.watchName;
 

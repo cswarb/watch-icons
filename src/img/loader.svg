@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="200"
+   height="200"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   version="1.0"
+   sodipodi:docname="Smoothed Octagon Simple.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective10" />
+    <inkscape:perspective
+       id="perspective2390"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <inkscape:perspective
+       id="perspective2460"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <font
+       horiz-adv-x="1024"
+       id="SVGTimesFont">
+      <font-face
+         id="font-face3311"
+         font-weight="normal"
+         units-per-em="2048"
+         font-family="SVGTimes" />
+      <missing-glyph
+         id="missing-glyph3313"
+         d="M128 0V1638H896V0H128ZM256 128H768V1510H256V128Z" />
+      <glyph
+         id="glyph3315"
+         d="M1184 469H135V584H1184V469Z"
+         horiz-adv-x="1319"
+         unicode="-" />
+    </font>
+    <inkscape:perspective
+       id="perspective3320"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <font
+       horiz-adv-x="1024"
+       id="font4416">
+      <font-face
+         id="font-face4404"
+         font-weight="normal"
+         units-per-em="2048"
+         font-family="SVGTimes" />
+      <missing-glyph
+         id="missing-glyph4406"
+         d="M128 0V1638H896V0H128ZM256 128H768V1510H256V128Z" />
+      <glyph
+         id="glyph4408"
+         d="M1184 469H135V584H1184V469Z"
+         horiz-adv-x="1319"
+         unicode="-" />
+    </font>
+    <inkscape:perspective
+       id="perspective4413"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <clipPath
+       id="cp55">
+      <polygon
+         points="66,5 66,646 709,646 709,5 66,5 "
+         id="polygon4397" />
+    </clipPath>
+    <clipPath
+       id="cp27">
+      <polygon
+         points="66,5 66,646 709,646 709,5 66,5 "
+         id="polygon4201" />
+    </clipPath>
+    <inkscape:perspective
+       id="perspective2454"
+       inkscape:persp3d-origin="24 : 16 : 1"
+       inkscape:vp_z="48 : 24 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_x="0 : 24 : 1"
+       sodipodi:type="inkscape:persp3d" />
+    <clipPath
+       id="cp1">
+      <polygon
+         id="polygon4011"
+         points="68,5 68,645 708,645 708,5 68,5 " />
+    </clipPath>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.8284271"
+     inkscape:cx="120.90545"
+     inkscape:cy="101.23438"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:object-nodes="true"
+     inkscape:snap-intersection-line-segments="true"
+     showguides="true"
+     inkscape:guide-bbox="true"
+     inkscape:window-width="1399"
+     inkscape:window-height="874"
+     inkscape:window-x="37"
+     inkscape:window-y="-4">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4654"
+       visible="true"
+       enabled="true" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="path4777"
+       style="fill:#000000;"
+       d="M 18.124269,66.101733 L 8.2586326,89.777834 C 7.7455433,90.813626 7.319459,91.97987 6.9604454,93.179022 C 5.2763318,98.63043 5.9159137,104.43765 8.0306029,109.62669 L 18.135274,133.92481 L 27.900855,157.64238 C 28.270457,158.73759 28.793834,159.86352 29.387918,160.96531 C 32.051826,166.0109 36.610411,169.66495 41.774953,171.83886 L 66.101522,181.87519 L 89.777772,191.74078 C 90.813566,192.25386 91.979814,192.67993 93.178987,193.03895 C 98.630434,194.72306 104.43767,194.08349 109.62673,191.96879 L 133.92502,181.86419 L 157.64272,172.09867 C 158.73795,171.72907 159.86389,171.20572 160.9657,170.61164 C 166.01132,167.94774 169.6654,163.38917 171.8393,158.22466 L 181.87572,133.89828 L 191.74135,110.22216 C 192.25444,109.18638 192.68054,108.02013 193.03955,106.82097 C 194.72366,101.36955 194.0841,95.562358 191.96937,90.373312 L 181.86473,66.075176 L 172.09913,42.35763 C 171.72952,41.262422 171.20617,40.136482 170.61206,39.034688 C 167.94816,33.989107 163.38957,30.335035 158.22503,28.16115 L 133.89846,18.124791 L 110.22222,8.2592219 C 109.18642,7.7461346 108.02017,7.3200535 106.821,6.9610527 C 101.36955,5.2769348 95.562327,5.9165177 90.373253,8.031206 L 66.074959,18.135802 L 42.357267,27.901323 C 41.262044,28.270927 40.136092,28.79429 39.034294,29.388376 C 33.988679,32.052262 30.334595,36.610813 28.160689,41.775337 L 18.124269,66.101733 z"
+       sodipodi:nodetypes="ccccccccccccccccccccccccccccccccc" />
+  </g>
+</svg>

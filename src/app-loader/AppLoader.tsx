@@ -1,32 +1,22 @@
-import { LoadingState } from './model';
 import classNames from 'classnames';
+import { ServiceStatus } from '../store/watch/reducer';
 
-export const AppLoader = ({ loaderState }: { loaderState: LoadingState }) => {
+export const AppLoader = ({ loaderState }: { loaderState: ServiceStatus }) => {
+    const loading = (state: ServiceStatus) => state === ServiceStatus.FETCHING;
+    const loaded = (state: ServiceStatus) => state === ServiceStatus.SUCCESS;
+
     return (
         <>
-            <div className="logo">
-                Watch Icons
-            </div>
+            <div className={`loader-container ${classNames({
+                ['loader-container--loading']: loading(loaderState),
+                ['loader-container--loaded']: loaded(loaderState),
+            })}`}>
+                <div className="loading-content">
+                    <p className="logo">
+                        Watch Icons
+                    </p>
 
-            <div className={`loader ${classNames({
-                    ['loader--loading']: loaderState === LoadingState.LOADING,
-                    ['loader--loaded']: loaderState === LoadingState.LOADED,
-                })}`}>
-                
-                <div className="loader__column">
-
-                </div>
-
-                <div className="loader__column">
-
-                </div>
-
-                <div className="loader__column">
-
-                </div>
-
-                <div className="loader__column">
-
+                    <div className="square"></div>
                 </div>
             </div>
         </>
@@ -34,9 +24,12 @@ export const AppLoader = ({ loaderState }: { loaderState: LoadingState }) => {
 }
 
 export const WithAppLoader = (Hoc: any) => {
-    return ({ loaderState, ...props }: { loaderState: LoadingState }) => {
+    return ({ loaderState, ...props }: { loaderState: ServiceStatus }) => {
         return (
-            loaderState !== LoadingState.LOADED ? <AppLoader loaderState={ loaderState } /> : <Hoc {...props} />
+            <>
+                <AppLoader loaderState={ loaderState } />
+                <Hoc {...props} />
+            </>
         )
     }
 };
