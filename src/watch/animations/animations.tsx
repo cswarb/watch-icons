@@ -8,6 +8,8 @@ export const WATCH_ANIMATIONS = Map <string, any>()
     .set('Royal Oak 15202', JumboAnimation);
 
 export const WatchAnimationFactory = ({ model, ...props }: { model: string }) => {
+    console.log('called');
+    
     const WatchAnimation = WATCH_ANIMATIONS.get(model) || FallbackAnimation;
 
     return (

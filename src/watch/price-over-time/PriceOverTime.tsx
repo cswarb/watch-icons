@@ -1,8 +1,8 @@
 import { useSelector } from 'react-redux';
 import { CurrencyContext, CURRENCY_TOKEN } from '../../contexts/currency.context'
 import { Currency } from '../../shared/currency/Currency'
-import { debug } from '../../shared/debug/debug';
 import { selectPriceById } from '../../store/watch/selectors';
+import { PriceOverTimeAnimation } from '../animations/price-over-time';
 import { StyledSectionTitle } from '../Watch';
 
 export const PriceOverTime = ({ priceId }: any) => {
@@ -18,6 +18,8 @@ export const PriceOverTime = ({ priceId }: any) => {
                 <Currency price={price.from} />
                 <Currency price={price.to} />
             </CurrencyContext.Provider>
+
+            <PriceOverTimeAnimation />
         </>
     )
 }

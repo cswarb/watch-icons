@@ -79,7 +79,6 @@ const defaultState = {
 };
 
 export function watchReducer(state = defaultState, action: any) {
-    console.log('action: ', action);
     switch (action.type) {
         case getAllWatches:
             return {
