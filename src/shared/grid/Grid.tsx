@@ -1,15 +1,15 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const StyledGrid = styled.div`
         display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 16px;
-        margin: 64px 0;
+        margin: 0;
     `;
 
 export const Grid = (props: any) => {
     return (
-        <StyledGrid className="grid">
+        <StyledGrid {...props} className="grid">
             {props.children}
         </StyledGrid>
     )
@@ -19,10 +19,11 @@ export const Grid = (props: any) => {
 const StyledGridItem = styled.div`
         font-size: 24px;
         line-height: 1.3;
-        margin: 24px 0;
+        margin: 0;
         border: 1px solid #bcbcbd;
         padding: 24px;
         border-radius: 3px;
+        position: relative;
 
         &:hover {
             cursor: pointer;
@@ -32,7 +33,7 @@ const StyledGridItem = styled.div`
 export const GridItem = (props: any) => {
 
     return (
-        <StyledGridItem className="grid-item">
+        <StyledGridItem {...props} className="grid-item">
             {props.children}
         </StyledGridItem>
     )

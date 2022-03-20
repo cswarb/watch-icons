@@ -17,7 +17,9 @@ export const WithDynamicBackground = (props: any) => {
     console.log('state: ', state);
 
     return (
-        <SwitchTransition>
+        <>
+        
+        {/*<SwitchTransition>
             <CSSTransition key={ state?.background }
                 nodeRef={nodeRef}
                 classNames="app-transition--fade"
@@ -26,9 +28,11 @@ export const WithDynamicBackground = (props: any) => {
                     background: '#ffffff' || `${state?.background}`,
                     color: `#000000`
                 }}>
+        */}
                     { props.children }
-                </StyledDynamicBackground>
+                {/* </StyledDynamicBackground>
             </CSSTransition >
-        </SwitchTransition >
+        </SwitchTransition > */}
+        </>
     )
 }

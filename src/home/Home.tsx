@@ -5,28 +5,18 @@ import { getBackgroundColour } from '../nav/Nav';
 import { WithPageContainer } from '../shared/page-container/PageContainer';
 import { selectWatchById } from '../store/watch/selectors';
 
-export const StyledLi = styled.li`
-    margin: 0;
-    list-style: none;
-    
-    a {
-        color: black;
-        text-decoration: none;
-    }
-`;
-
 export const WatchItem = ({ item }: any) => {
     const watch = useSelector(state => selectWatchById(state, item));
 
     return (
-        <StyledLi>
+        <li>
             <Link
                 className="nav__anchor"
                 to={`/watch/${watch?._id}`}
                 state={{ background: '#ffffff' || getBackgroundColour(watch.make), color: 'white' }}>
                 {watch?.make} {watch?.model} '{watch?.shortname}'
             </Link>
-        </StyledLi>
+        </li>
     );
 }
 

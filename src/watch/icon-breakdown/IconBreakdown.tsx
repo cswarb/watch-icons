@@ -1,18 +1,11 @@
 import { useSelector } from 'react-redux';
+import { Card, CardContainer } from '../../shared/card/card';
 import { WatchReducerBreakdown } from '../../store/watch/reducer';
 import { selectDerivedBreakdownsById } from '../../store/watch/selectors';
-import { StyledSectionTitle } from '../Watch';
 
 const BreakdownItem = ({ breakdown }: { breakdown: WatchReducerBreakdown }) => {
     return (
-        <div>
-            <header>
-                <h3>{breakdown.title}</h3>
-            </header>
-            <footer>
-                <p>{breakdown.description}</p>
-            </footer>
-        </div>
+        <Card title={breakdown.title} description={breakdown.description}></Card>
     )
 }
 
@@ -22,9 +15,9 @@ const BreakdownList = ({ breakdowns }: { breakdowns: Array<WatchReducerBreakdown
     });
 
     return (
-        <section>
+        <CardContainer>
             {list}
-        </section>
+        </CardContainer>
     )
 }
 
@@ -33,9 +26,9 @@ export const IconBreakdown = ({ breakdownIds }: { breakdownIds: Array<string> })
 
     return (
         <div style={{margin: '0 0 10rem 0'}}>
-            <StyledSectionTitle>
+            <div className="watch-section-title">
                 Breakdown of why it is iconic
-            </StyledSectionTitle>
+            </div>
 
             <BreakdownList breakdowns={breakdowns} />
         </div>
