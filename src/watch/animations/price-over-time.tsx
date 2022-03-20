@@ -90,7 +90,7 @@ export const PriceOverTimeAnimation = (props: any) => {
                 .attr('y1', (d: any) => 0)
                 .attr('y2', (d: any) => dimensions.boundedHeight)
                 .attr('opacity', '0.1')
-                .attr('stroke', 'white')
+                .attr('stroke', 'black')
         }, (update) => {
             return update;
         }, (exit) => {
@@ -101,7 +101,7 @@ export const PriceOverTimeAnimation = (props: any) => {
         dataArea.selectAll('.zero-line').data([dataset]).join((enter) => {
             return enter.append('line')
                 .attr('class', 'zero-line')
-                .attr('stroke', 'white')
+                .attr('stroke', 'black')
                 .attr('x1', '0')
                 .attr('x2', dimensions.boundedWidth)
                 .attr('y1', yScale(RRP))
@@ -171,7 +171,7 @@ export const PriceOverTimeAnimation = (props: any) => {
                 .attr('class', 'line-1')
                 .attr('d', (d: any) => line1(d))
                 .attr('fill', 'transparent')
-                .attr('stroke', 'aliceblue')
+                .attr('stroke', 'black')
                 .attr('stroke-width', '1.5px')
         }, (update) => {
             return update;

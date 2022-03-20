@@ -13,11 +13,21 @@ export const PriceOverTime = ({ priceId }: any) => {
             <StyledSectionTitle>
                 Price over time
             </StyledSectionTitle>
+
+            <p>RRP: £10,000</p>
+
+            <p>RRP vs Market price (dual line chart toggle)</p>
             
-            <CurrencyContext.Provider value={CURRENCY_TOKEN}>
-                <Currency price={price.from} />
-                <Currency price={price.to} />
-            </CurrencyContext.Provider>
+            <p>Market value</p>
+            <div className="currency-container">
+                <CurrencyContext.Provider value={CURRENCY_TOKEN}>
+                    <Currency time={'From (2018)'} price={price.from} />
+                    <span className="currency-box__separator">{'>'}</span>
+                    <Currency time={'To (2022)'} price={price.to} />
+                </CurrencyContext.Provider>
+            </div>
+
+            <p>6000% increase/decrease</p>
 
             <PriceOverTimeAnimation />
         </>

@@ -23,7 +23,7 @@ export const WatchItem = ({ item }: any) => {
             <Link
                 className="nav__anchor"
                 to={`/watch/${watch?._id}`}
-                state={{ background: getBackgroundColour(watch.make), color: 'white' }}>
+                state={{ background: '#ffffff' || getBackgroundColour(watch.make), color: 'white' }}>
                 {watch?.make} {watch?.model} '{watch?.shortname}'
             </Link>
         </StyledLi>

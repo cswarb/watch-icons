@@ -23,8 +23,8 @@ export const WithDynamicBackground = (props: any) => {
                 classNames="app-transition--fade"
                 timeout={ 500 }>
                 <StyledDynamicBackground ref={nodeRef} className="app-transition--fade" style={{
-                    background: `${state?.background || '#ffffff'}`,
-                    color: `${state?.color || '#000000'}`
+                    background: '#ffffff' || `${state?.background}`,
+                    color: `#000000`
                 }}>
                     { props.children }
                 </StyledDynamicBackground>

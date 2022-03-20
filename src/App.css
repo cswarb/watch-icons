@@ -1,5 +1,113 @@
 /**/
 
+
+
+.currency-container {
+    display: flex;
+    gap: 1rem;
+}
+
+.currency-box {
+    background-color: #1C56C2;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.currency-box__title {
+    margin: 0;
+}
+
+.currency-box__price {
+    margin: 0;
+}
+
+.currency-box__separator {
+    font-size: 3rem;
+}
+
+    
+.tooltip-container {
+    position: relative;
+    border: 1px solid #9fa4a7;
+    border-radius: 50px;
+    margin: 0.5rem;
+    display: inline-flex;
+    padding: 0.1rem 0.2rem 0.1rem 0.5rem;
+    font-size: 0.75rem;
+    color: #9fa4a7;
+    transition: all 0.3s ease-in-out;
+}
+.tooltip-container:hover {
+    border-color:#1C56C2;
+    color:#1C56C2;
+    cursor: help;
+}
+.tooltip-container:hover > .tooltip-icon--question:before {
+    background-color: #1c56c2;
+    color: white;
+}
+.tooltip-content {
+    margin: 0;
+}
+.tooltip-icon {
+    position: relative;
+    display: inline-block;
+}
+.tooltip-icon--question {
+
+}
+.tooltip-icon--question:before {
+    transition: all 0.3s ease-in-out;
+    content: '?';
+    display: inline-block;
+    border: 1px solid;
+    border-color: inherit;
+    color: inherit;
+    border-radius: 50%;
+    margin-left: 4px;
+    width: 15px;
+    height: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+
+
+
+
+
+.circle {
+    border-radius: 50%;
+    background-color: #fff2c1;
+    width: 400px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #343636;
+    margin: 0 1rem;
+    flex-flow: column nowrap;
+    padding: 2rem;
+    overflow: hidden;
+    position: relative;
+}
+.circle-figure {
+    font-weight: 800;
+        margin: 0;
+    display: block;
+    font-size: 3rem;
+}
+.circle-description {
+    margin: 0;
+    display: block;
+        text-align: center;
+}
+
+
+
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
 
 * {
