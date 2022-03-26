@@ -223,12 +223,12 @@ export const PriceOverTimeAnimation = (props: any) => {
                 // .attr('fill', '#FE7701')
                 .attr('opacity', '0.5')
                 .attr('d', (d) => area(d))
-                .on('mouseenter', (e, d) => {
-                    d3.select(e.target).attr('opacity', 0.9).raise();
-                })
-                .on('mouseleave', (e, d) => {
-                    d3.select(e.target).attr('opacity', 0.5).lower();
-                });
+                // .on('mouseenter', (e, d) => {
+                //     d3.select(e.target).attr('opacity', 0.9).raise();
+                // })
+                // .on('mouseleave', (e, d) => {
+                //     d3.select(e.target).attr('opacity', 0.5).lower();
+                // });
         });
 
         const area2 = d3.area()
@@ -273,7 +273,7 @@ export const PriceOverTimeAnimation = (props: any) => {
                 .attr('d', (d: any) => line1(d))
                 .attr('fill', 'transparent')
                 .attr('opacity', '0.75')
-                .attr('stroke', '#FE7701')
+                .attr('stroke', '#a7a593')
                 .attr('stroke-width', '2.5px')
         }, (update) => {
             return update;
@@ -294,7 +294,7 @@ export const PriceOverTimeAnimation = (props: any) => {
                 .attr('fill', 'transparent')
                 .attr('pointer-events', 'none')
                 .attr('opacity', '0.75')
-                .attr('stroke', '#1B57C2')
+                .attr('stroke', '#195649')
                 .attr('stroke-width', '2.5px')
         }, (update) => {
             return update;
@@ -309,7 +309,7 @@ export const PriceOverTimeAnimation = (props: any) => {
             enter.append('circle')
                 .attr('class', 'dots')
                 // .attr('fill', '#FE7701')
-                .attr('fill', `url('#orangeGradient')`)
+                .attr('fill', `url('#goldGradient')`)
                 .attr('cx', (d) => xScale(xAccessor(d)))
                 .attr('cy', (d) => yScale(yAccessor1(d)))
                 .attr('r', '4');
@@ -329,7 +329,7 @@ export const PriceOverTimeAnimation = (props: any) => {
         dataArea.selectAll('.dots-2').data(dataset).join((enter) => {
              enter.append('circle')
                 .attr('class', 'dots-2')
-                 .attr('fill', `url('#blueGradient')`)
+                 .attr('fill', `url('#greenGradient')`)
                 // .attr('fill', '#1B57C2')
                 .attr('cx', (d) => xScale(xAccessor(d)))
                 .attr('cy', (d) => yScale(yAccessor2(d)))
@@ -392,10 +392,10 @@ export const PriceOverTimeAnimation = (props: any) => {
 
         var color = d3.scaleOrdinal()
             .domain(keys)
-            .range(['#1B57C2', `url('#hatch-market')`]);
+            .range(['#195649', `url('#hatch-market')`]);
         var textColor = d3.scaleOrdinal()
             .domain(keys)
-            .range(['#1B57C2', '#FE7701']);
+            .range(['#195649', '#a7a593']);
 
         
 
@@ -462,19 +462,27 @@ export const PriceOverTimeAnimation = (props: any) => {
         <div>
             <svg ref={ref}>
                 <defs>
+                    <linearGradient id="goldGradient">
+                        <stop offset="0%" stopColor="#a7a593" />
+                        <stop offset="100%" stopColor="#a7a593" />
+                    </linearGradient>
                     <linearGradient id="orangeGradient">
                         <stop offset="0%" stopColor="#f79f60" />
                         <stop offset="100%" stopColor="#FE7701" />
+                    </linearGradient>
+                    <linearGradient id="greenGradient">
+                        <stop offset="0%" stopColor="#195649" />
+                        <stop offset="100%" stopColor="#195649" />
                     </linearGradient>
                     <linearGradient id="blueGradient">
                         <stop offset="0%" stopColor="#5472bc" />
                         <stop offset="100%" stopColor="#184ca9" />
                     </linearGradient>
                     <pattern id="hatch-market" width="3" height="3" patternTransform="rotate(205)" patternUnits="userSpaceOnUse">
-                        <rect width="2" height="3" style={{fill: '#f79f60'}}></rect>
+                        <rect width="2" height="3" style={{fill: '#a7a593'}}></rect>
                     </pattern>
                     <pattern id="hatch-rrp" width="3" height="3" patternTransform="rotate(205)" patternUnits="userSpaceOnUse">
-                        <rect width="2" height="3" style={{ fill: '#f79f60' }}></rect>
+                        <rect width="2" height="3" style={{ fill: '#a7a593' }}></rect>
                     </pattern>
                 </defs>
             </svg>

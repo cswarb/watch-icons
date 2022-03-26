@@ -62,23 +62,36 @@ export const KeyStats = () => {
     )
 }
 
+export const ProductionTime = () => {
+    return (
+        <>
+            <h2>Production years</h2>
+            <span>jumbo: </span> <p>2014</p> <span>-</span> <p>2022</p>
+            <span>zeitwerk: </span><p>2009</p> <span>-</span> <p>Current</p>
+        </>
+    )
+}
+
 export const Watch = ({ watch }: { watch: WatchReducerWatch}) => {
     return (
         watch && (
             <>
                 <div style={{
                     textAlign: 'center',
+                    margin: '10rem 0 1rem 0'
                 }}>
-                    <WatchBrandFactory make={watch.make} />
-                    <WatchName watchName={watch.model} />
+                    {/* <WatchBrandFactory make={watch.make} /> */}
+                    <WatchName watchMake={watch.make} watchName={watch.model} />
 
                     <WatchAnimationFactory model={watch.model} />
                 </div>
 
                 <div className="in-page-container">
-                    <KeyStats />
+                    {/* <KeyStats /> */}
 
                     <StatBar />
+
+                    <ProductionTime />
 
                     <div className="watch-section">
                         <IconBreakdown breakdownIds={watch.breakdownIds} />
@@ -88,7 +101,7 @@ export const Watch = ({ watch }: { watch: WatchReducerWatch}) => {
                         <PriceOverTime priceId={watch.priceId} />
                     </div>
 
-                    <Timeline />
+                    {/* <Timeline /> */}
                 </div>
             </>
         )
@@ -97,9 +110,15 @@ export const Watch = ({ watch }: { watch: WatchReducerWatch}) => {
 
 export const WatchName = (props: any) => {
     const watchName = props.watchName;
+    const watchBrand = props.watchMake;
 
     return (
-        <div className="watch-name">{`${watchName?.charAt(0).toUpperCase()}${watchName?.slice(1)}`}</div>
+        <>
+            {/* <p> */}
+                <p className="watch-brand">{`${watchBrand?.charAt(0).toUpperCase()}${watchBrand?.slice(1)}`}</p>
+                <p className="watch-name">{`${watchName?.charAt(0).toUpperCase()}${watchName?.slice(1)}`}</p>
+            {/* </p> */}
+        </>
     )
 }
 

@@ -1,10 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { ThemeContext, Themes } from '../contexts/theme.context';
 import { useSelector } from 'react-redux';
 import { selectAllWatchesIds, selectWatchById } from '../store/watch/selectors';
 import { WatchReducerWatch } from '../store/watch/reducer';
+import { Logo } from '../logo/logo';
 
 const StyledNav = styled.nav`
     margin: 2rem;
@@ -15,11 +16,15 @@ const StyledUl = styled.ul`
     display: flex;
     margin: 0;
     padding: 0;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
 `;
 
 const StyledLi = styled.li`
     margin: 0 2rem;
     list-style: none;
+    text-align: center;
 
     &:first-of-type {
         margin-left: 0;
@@ -61,6 +66,7 @@ export const WatchLink = ({ id }: any) => {
 export const Nav = () => {
     const theme = useContext(ThemeContext);
     const watchIds = useSelector(selectAllWatchesIds);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
     
     const watchList = watchIds.map((id) => {
         return (
@@ -73,13 +79,32 @@ export const Nav = () => {
             <StyledNav>
                 <StyledUl>
                     <StyledLi>
-                        <Link className="nav__anchor" to="/" state={{ background: '#FFFFFF', color: '#000000' }}>Home</Link>
+                        <Link className="nav__anchor" to="/" title="Home" state={{ background: '#FFFFFF', color: '#000000' }}>
+                            <Logo />
+                        </Link>
                     </StyledLi>
 
-                    {watchList}
+                    <div>
+                        <button onClick={() => setDropdownOpen(!dropdownOpen)}>Watches ^</button>
+                    </div>
+
+                    {
+                        dropdownOpen && 
+                        <div className="dropdown">
+                            {/* <button onClick={() => setDropdownOpen(false)}>x</button> */}
+
+                            <div className="dropdown__items">
+                                {watchList}
+                            </div>
+                        </div>
+                    }
                 
                     <StyledLi>
                         <Link className="nav__anchor" to="/library" state={{ background: '#FFFFFF', color: '#000000' }}>Technical library</Link>
+                    </StyledLi>
+
+                    <StyledLi>
+                        <Link className="nav__anchor" to="/about" state={{ background: '#FFFFFF', color: '#000000' }}>About</Link>
                     </StyledLi>
                 </StyledUl>
             </StyledNav>

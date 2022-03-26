@@ -12,7 +12,7 @@ export const AppLoader = ({ loaderState }: { loaderState: ServiceStatus }) => {
                 ['loader-container--loaded']: loaded(loaderState),
             })}`}>
                 <div className="loading-content">
-                    <p className="logo">
+                    <p className="loader">
                         Watch Icons
                     </p>
 

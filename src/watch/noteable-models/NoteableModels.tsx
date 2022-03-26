@@ -16,8 +16,10 @@ const NoteableModelItem = ({ noteableItem }: { noteableItem: WatchReducerNoteabl
 }
 
 const NoteableModelList = ({ noteableModels }: { noteableModels: Array<WatchReducerNoteableModels> }) => {
-    const list = noteableModels.map((n) => {
-        return <NoteableModelItem key={n._id} noteableItem={n} />;
+    const list = noteableModels.map((n, i) => {
+        console.log(n);
+        
+        return <NoteableModelItem key={`${n._id}-${i}`} noteableItem={n} />;
     });
 
     return (

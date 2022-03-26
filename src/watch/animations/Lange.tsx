@@ -254,8 +254,6 @@ export const LangeAnimation = (props: any) => {
 
     return (
         <>
-            <p>Noom replication</p>
-
             <svg ref={ref}></svg>
         </>
     )

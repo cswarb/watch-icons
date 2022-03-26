@@ -7,6 +7,16 @@ var watchBreakdownSchema = new mongoose.Schema({
     description: String
 });
 var watchPriceSchema = new mongoose.Schema({
+    rrp: {
+        from: String,
+        to: String
+    },
+    market: {
+        from: String,
+        to: String
+    }
+});
+var watchProductionYearsSchema = new mongoose.Schema({
     from: String,
     to: String
 });
@@ -15,11 +25,43 @@ var watchNoteableModelsSchema = new mongoose.Schema({
     date: Date,
     description: String
 });
+var watchStatFunctionSchema = new mongoose.Schema({
+    name: String
+});
+var watchStatsSchema = new mongoose.Schema({
+    components: Number,
+    powerReserveHours: Number,
+    functions: [watchStatFunctionSchema],
+    productionNumbersPerYear: Number
+});
+var watchBrandStatsSchema = new mongoose.Schema({
+    productionNumbersPerYear: Number,
+    revenuePerYear: Number,
+    location: String,
+    founding: Date,
+    noteableAchievements: [
+        {
+            name: String
+        }
+    ],
+    socialActivity: {
+        instagram: {
+            tagged: {
+                name: String,
+                value: Number,
+                date: Date
+            }
+        }
+    }
+});
 exports.watchSchema = new mongoose.Schema({
     make: String,
     model: String,
     shortname: String,
     breakdown: [watchBreakdownSchema],
     noteableModels: [watchNoteableModelsSchema],
-    price: watchPriceSchema
+    price: watchPriceSchema,
+    productionYears: watchProductionYearsSchema,
+    watchStats: watchStatsSchema,
+    brandStats: watchBrandStatsSchema
 });
