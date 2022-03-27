@@ -27,6 +27,14 @@ export interface WatchReducer {
         byId: Map<string, WatchReducerNoteableModels>;
         allIds: Array<string>;
     },
+    watchStats: {
+        byId: Map<string, WatchReducerWatchStats>;
+        allIds: Array<string>;
+    },
+    brandStats: {
+        byId: Map<string, WatchReducerBrandStats>;
+        allIds: Array<string>;
+    }
 };
 
 export interface WatchReducerWatch {
@@ -37,6 +45,8 @@ export interface WatchReducerWatch {
     shortname: string;
     breakdownIds: Array<string>;
     priceId: string;
+    brandStatsId: string;
+    watchStatsId: string;
 }
 
 export interface WatchReducerNoteableModels {
@@ -53,9 +63,52 @@ export interface WatchReducerBreakdown {
 }
 
 export interface WatchReducerPrice {
+    rrp: {
+        from: string;
+        to: string;
+    },
+    market: {
+        from: string;
+        to: string;
+    }
+}
+
+export interface WatchReducerBrandStats {
     _id: string;
-    from: string;
-    to: string;
+    productionNumbersPerYear: number,
+    revenuePerYear: number,
+    location: string,
+    founding: Date,
+    noteableAchievements: [
+        {
+            _id: string,
+            name: string
+        }
+    ],
+    socialActivity: {
+        instagram: {
+            tagged: {
+                name: string,
+                value: number,
+                date: Date
+            }
+        }
+    },
+}
+
+export interface WatchReducerWatchStats {
+    _id: string;
+    productionYears: {
+        from: Date,
+        to: Date,
+    },
+    components: number,
+    powerReserveHours: number,
+    functions: [{
+        name: string,
+        _id: string
+    }],
+    productionNumbersPerYear: number,
 }
 
 const defaultState = {
@@ -75,7 +128,15 @@ const defaultState = {
     noteableModels: {
         byId: Map<string, WatchReducerNoteableModels>(),
         allIds: []
-    }
+    },
+    watchStats: {
+        byId: Map<string, WatchReducerWatchStats>(),
+        allIds: []
+    },
+    brandStats: {
+        byId: Map<string, WatchReducerBrandStats>(),
+        allIds: []
+    },
 };
 
 export function watchReducer(state = defaultState, action: any) {
@@ -93,12 +154,14 @@ export function watchReducer(state = defaultState, action: any) {
                 status: ServiceStatus.SUCCESS,
                 watches: {
                     byId: response.reduce((acc: Map<string, WatchReducerWatch>, w: WatchResponse) => {
-                        const { breakdown, price, noteableModels, ...watch } = w;
-                        const g = {
+                        const { breakdown, price, noteableModels, brandStats, watchStats, ...watch } = w;
+                        const g: WatchReducerWatch = {
                             ...watch,
                             breakdownIds: breakdown.map((b: any) => b._id),
                             priceId: price._id,
-                            noteableModelIds: noteableModels.map((n: any) => n._id)
+                            noteableModelIds: noteableModels.map((n: any) => n._id),
+                            brandStatsId: brandStats._id,
+                            watchStatsId: watchStats._id,
                         };
 
                         return acc.set(w._id, g);
@@ -128,6 +191,18 @@ export function watchReducer(state = defaultState, action: any) {
                         return acc.concat(noteableModels);
                     }, Map()),
                     allIds: response.reduce((acc: Array<string>, w: WatchResponse) => acc.concat(w.noteableModels.map((n: any) => n._id)), [])
+                },
+                watchStats: {
+                    byId: response.reduce((acc: Map<string, WatchReducerWatchStats>, w: WatchResponse) => {
+                        return acc.set(w.watchStats._id, w.watchStats);
+                    }, Map()),
+                    allIds: response.reduce((acc: Array<string>, w: WatchResponse) => acc.concat(w.watchStats._id), [])
+                },
+                brandStats: {
+                    byId: response.reduce((acc: Map<string, WatchReducerBrandStats>, w: WatchResponse) => {
+                        return acc.set(w.brandStats._id, w.brandStats);
+                    }, Map()),
+                    allIds: response.reduce((acc: Array<string>, w: WatchResponse) => acc.concat(w.brandStats._id), [])
                 }
             };
         case getAllWatchesError: 

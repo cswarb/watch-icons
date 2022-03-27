@@ -25,7 +25,7 @@ export const IconBreakdown = ({ breakdownIds }: { breakdownIds: Array<string> })
     const breakdowns: Array<WatchReducerBreakdown> = useSelector(state => selectDerivedBreakdownsById(state, breakdownIds));
 
     return (
-        <div style={{margin: '0 0 10rem 0'}}>
+        <div style={{}}>
             <div className="watch-section-title">
                 Breakdown of why it is iconic
             </div>

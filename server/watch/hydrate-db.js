@@ -79,10 +79,6 @@ var WATCH_DB_FIXTURE = function () {
                 to: '27900 GBP'
             }
         },
-        productionYears: {
-            from: new Date(),
-            to: new Date()
-        },
         watchStats: {
             components: 100,
             powerReserveHours: 65,
@@ -100,7 +96,11 @@ var WATCH_DB_FIXTURE = function () {
                     name: 'Date'
                 }
             ],
-            productionNumbersPerYear: 1500
+            productionNumbersPerYear: 1500,
+            productionYears: {
+                from: new Date(),
+                to: new Date()
+            }
         },
         brandStats: {
             productionNumbersPerYear: 50000,
@@ -175,10 +175,6 @@ var WATCH_DB_FIXTURE = function () {
                 to: '27900 GBP'
             }
         },
-        productionYears: {
-            from: new Date(),
-            to: new Date()
-        },
         watchStats: {
             components: 100,
             powerReserveHours: 65,
@@ -196,7 +192,11 @@ var WATCH_DB_FIXTURE = function () {
                     name: 'Date'
                 }
             ],
-            productionNumbersPerYear: 1500
+            productionNumbersPerYear: 1500,
+            productionYears: {
+                from: new Date(),
+                to: new Date()
+            }
         },
         brandStats: {
             productionNumbersPerYear: 50000,

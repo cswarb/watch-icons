@@ -33,6 +33,30 @@ export const selectPrices = createSelector(selectRootWatches, (state) => {
     return state.prices;
 });
 
+export const selectWatchStats = createSelector(selectRootWatches, (state) => {
+    return state.watchStats;
+});
+
+export const selectBrandStats = createSelector(selectRootWatches, (state) => {
+    return state.brandStats;
+});
+
+export const selectAllWatchStatIds = createSelector(selectWatchStats, (watchStats) => {
+    return watchStats.allIds;
+});
+
+export const selectWatchStatById = createSelector(selectWatchStats, (watchStats) => {
+    return watchStats.byId;
+});
+
+export const selectAllBrandStatIds = createSelector(selectBrandStats, (brandStats) => {
+    return brandStats.allIds;
+});
+
+export const selectBrandStatById = createSelector(selectBrandStats, (brandStats) => {
+    return brandStats.byId;
+});
+
 export const selectPricesById = createSelector(selectPrices, (prices) => {
     return prices.byId;
 });
@@ -70,6 +94,22 @@ export const selectPriceById: any = createSelector(
     (state: any, priceId: string) => priceId,
     (prices, priceId) => {
         return prices.get(priceId);
+    }
+);
+
+export const selectWatchStatsById: any = createSelector(
+    selectWatchStatById,
+    (state: any, watchStatId: string) => watchStatId,
+    (prices, watchStatId) => {
+        return prices.get(watchStatId);
+    }
+);
+
+export const selectBrandStatsById: any = createSelector(
+    selectBrandStatById,
+    (state: any, brandStatsId: string) => brandStatsId,
+    (prices, brandStatsId) => {
+        return prices.get(brandStatsId);
     }
 );
 

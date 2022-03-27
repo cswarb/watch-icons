@@ -23,12 +23,12 @@ export const PriceOverTime = ({ priceId }: any) => {
                 <>
                     <div className="currency-container">
                         <CurrencyContext.Provider value={CURRENCY_TOKEN}>
-                            <Currency time={'Release (2018)'} price={price.from} />
+                            <Currency time={'Release (2018)'} price={price.rrp.from} />
                             <span className="currency-box__separator">{'>'}</span>
-                            <Currency time={'Now (2022)'} price={price.to} />
+                            <Currency time={'Now (2022)'} price={price.rrp.to} />
                         </CurrencyContext.Provider>
                     </div>
-                    <p>{percentDiff(price.from, price.to)}</p>
+                    <p>{percentDiff(price.rrp.from, price.rrp.to)}</p>
                 </>
             }></Card>
 
@@ -36,12 +36,12 @@ export const PriceOverTime = ({ priceId }: any) => {
                 <>
                     <div className="currency-container">
                         <CurrencyContext.Provider value={CURRENCY_TOKEN}>
-                            <Currency time={'From (2018)'} price={price.from} />
+                            <Currency time={'From (2018)'} price={price.market.from} />
                             <span className="currency-box__separator">{'>'}</span>
-                            <Currency time={'To (2022)'} price={price.to} />
+                            <Currency time={'To (2022)'} price={price.market.to} />
                         </CurrencyContext.Provider>
                     </div>
-                    <p>{percentDiff(price.from, price.to)}</p>
+                    <p>{percentDiff(price.market.from, price.market.to)}</p>
                 </>
             }></Card>
             

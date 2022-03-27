@@ -13,6 +13,9 @@ import { CircleSize, StatCircle } from './stats/circle';
 import { Timeline } from './timeline/timeline';
 import { StatBar } from './stats/stat-bar';
 import { Chip } from '../shared/chip/chip';
+import { useSelector } from 'react-redux';
+import { selectBrandStatsById, selectWatchStatsById } from '../store/watch/selectors';
+import { debug } from '../shared/debug/debug';
 
 
 const DarkTooltip = styled(({ className, ...props }) => (
@@ -25,7 +28,11 @@ const DarkTooltip = styled(({ className, ...props }) => (
     },
 }));
 
-export const KeyStats = () => {
+export const KeyStats = ({ brandStatsId }: any) => {
+    const brandStats = useSelector(state => selectBrandStatsById(state, brandStatsId));
+    console.log('brandStats: ', brandStats);
+    
+
     return (
         <div>
             <div>
@@ -62,12 +69,14 @@ export const KeyStats = () => {
     )
 }
 
-export const ProductionTime = () => {
+export const ProductionTime = ({ watchStatsId }: any) => {
+    const watchStats = useSelector(state => selectWatchStatsById(state, watchStatsId));
+
     return (
         <>
             <h2>Production years</h2>
-            <span>jumbo: </span> <p>2014</p> <span>-</span> <p>2022</p>
-            <span>zeitwerk: </span><p>2009</p> <span>-</span> <p>Current</p>
+            <p>from: {watchStats.productionYears.from}</p>
+            <p>from: {watchStats.productionYears.to}</p>
         </>
     )
 }
@@ -87,11 +96,11 @@ export const Watch = ({ watch }: { watch: WatchReducerWatch}) => {
                 </div>
 
                 <div className="in-page-container">
-                    {/* <KeyStats /> */}
+                    {/* <KeyStats brandStatsId={watch.brandStatsId} /> */}
 
-                    <StatBar />
+                    <StatBar watchStatsId={watch.watchStatsId} />
 
-                    <ProductionTime />
+                    <ProductionTime watchStatsId={watch.watchStatsId} />
 
                     <div className="watch-section">
                         <IconBreakdown breakdownIds={watch.breakdownIds} />

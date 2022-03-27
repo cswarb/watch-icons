@@ -36,6 +36,7 @@ const watchStatsSchema = new mongoose.Schema({
     powerReserveHours: Number,
     functions: [ watchStatFunctionSchema ],
     productionNumbersPerYear: Number,
+    productionYears: watchProductionYearsSchema,
 });
 
 const watchBrandStatsSchema = new mongoose.Schema({
@@ -66,7 +67,6 @@ export const watchSchema = new mongoose.Schema({
     breakdown: [ watchBreakdownSchema ],
     noteableModels: [ watchNoteableModelsSchema ],
     price: watchPriceSchema,
-    productionYears: watchProductionYearsSchema,
     watchStats: watchStatsSchema,
     brandStats: watchBrandStatsSchema
 });
