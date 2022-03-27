@@ -1,7 +1,7 @@
 import { Map } from 'immutable';
 import { FallbackAnimation } from './Fallback';
-import { JumboAnimation } from './Jumbo';
-import { LangeAnimation } from './Lange';
+import { JumboAnimation } from './royal-oak/Jumbo';
+import { LangeAnimation } from './zeitwerk/Lange';
 
 export const WATCH_ANIMATIONS = Map <string, any>()
     .set('Zeitwerk', LangeAnimation)
@@ -16,5 +16,3 @@ export const WatchAnimationFactory = ({ model, ...props }: { model: string }) =>
         <WatchAnimation {...props} />
     )
 }
-
-

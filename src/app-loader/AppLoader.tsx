@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+import { Logo } from '../logo/logo';
 import { ServiceStatus } from '../store/watch/reducer';
 
 export const AppLoader = ({ loaderState }: { loaderState: ServiceStatus }) => {
@@ -12,9 +13,7 @@ export const AppLoader = ({ loaderState }: { loaderState: ServiceStatus }) => {
                 ['loader-container--loaded']: loaded(loaderState),
             })}`}>
                 <div className="loading-content">
-                    <p className="loader">
-                        Watch Icons
-                    </p>
+                    <Logo />
 
                     <div className="square"></div>
                 </div>

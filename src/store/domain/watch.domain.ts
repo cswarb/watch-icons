@@ -6,18 +6,33 @@ export interface WatchResponse {
     price: {
         _id: string
         rrp: {
-            from: string,
-            to: string,
+            from: {
+                value: number,
+                currency: string
+            },
+            to: {
+                value: number,
+                currency: string
+            },
         },
         market: {
-            from: string,
-            to: string,
+            from: {
+                value: number,
+                currency: string
+            },
+            to: {
+                value: number,
+                currency: string
+            },
         }
     },
     brandStats: {
         _id: string;
         productionNumbersPerYear: number,
-        revenuePerYear: number,
+        revenuePerYear: {
+            value: number,
+            currency: string
+        },
         location: string,
         founding: Date,
         noteableAchievements: [

@@ -8,12 +8,24 @@ var watchBreakdownSchema = new mongoose.Schema({
 });
 var watchPriceSchema = new mongoose.Schema({
     rrp: {
-        from: String,
-        to: String
+        from: {
+            value: Number,
+            currency: String
+        },
+        to: {
+            value: Number,
+            currency: String
+        }
     },
     market: {
-        from: String,
-        to: String
+        from: {
+            value: Number,
+            currency: String
+        },
+        to: {
+            value: Number,
+            currency: String
+        }
     }
 });
 var watchProductionYearsSchema = new mongoose.Schema({
@@ -37,7 +49,10 @@ var watchStatsSchema = new mongoose.Schema({
 });
 var watchBrandStatsSchema = new mongoose.Schema({
     productionNumbersPerYear: Number,
-    revenuePerYear: Number,
+    revenuePerYear: {
+        value: Number,
+        currency: String
+    },
     location: String,
     founding: Date,
     noteableAchievements: [

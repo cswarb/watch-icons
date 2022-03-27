@@ -33,12 +33,24 @@ const WATCH_DB_FIXTURE = () => {
         ],
         price: {
             rrp: {
-                from: '16600 GBP',
-                to: '27900 GBP',
+                from: {
+                    value: 16600,
+                    currency: 'GBP'
+                },
+                to: {
+                    value: 27900,
+                    currency: 'GBP'
+                },
             },
             market: {
-                from: '16600 GBP',
-                to: '27900 GBP',
+                from: {
+                    value: 16600,
+                    currency: 'GBP'
+                },
+                to: {
+                    value: 27900,
+                    currency: 'GBP'
+                },
             }
         },
         watchStats: {
@@ -66,7 +78,10 @@ const WATCH_DB_FIXTURE = () => {
         },
         brandStats: {
             productionNumbersPerYear: 50000,
-            revenuePerYear: 140000000,
+            revenuePerYear: {
+                value: 140000000,
+                currency: 'USD'
+            },
             location: 'Switzerland',
             founding: new Date(),
             noteableAchievements: [
@@ -129,12 +144,24 @@ const WATCH_DB_FIXTURE = () => {
         ],
         price: {
             rrp: {
-                from: '36000 GBP',
-                to: '73300 GBP',
+                from: {
+                    value: 36000,
+                    currency: 'GBP'
+                },
+                to: {
+                    value: 73300,
+                    currency: 'GBP'
+                },
             },
             market: {
-                from: '16600 GBP',
-                to: '27900 GBP',
+                from: {
+                    value: 36000,
+                    currency: 'GBP'
+                },
+                to: {
+                    value: 60000,
+                    currency: 'GBP'
+                },
             }
         },
         watchStats: {
@@ -162,7 +189,10 @@ const WATCH_DB_FIXTURE = () => {
         },
         brandStats: {
             productionNumbersPerYear: 50000,
-            revenuePerYear: 140000000,
+            revenuePerYear: {
+                value: 14000000,
+                currency: 'USD'
+            },
             location: 'Germany',
             founding: new Date(),
             noteableAchievements: [

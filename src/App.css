@@ -78,10 +78,19 @@ h1,h2,h3,h4,h5,h6 {
     /* fill: #dee2e7; */
 }
 
+.y-axis--placeholder {
+    stroke: #e0e5eb;
+}
+
 .x-axis {
     stroke: #b4b9bf;
     /* fill: #dee2e7; */
 }
+
+.x-axis--placeholder {
+    stroke: #e0e5eb;
+}
+
 
 .y-axis line {
     stroke: #dee2e7;
@@ -582,4 +591,114 @@ animation: shimmer 1s infinite;
 
 .logo-2 {
     font-weight: 400;
+}
+
+
+
+
+
+
+
+
+
+
+.price__title {
+    font-size: 1.7rem;
+}
+
+.price__sub-title {
+    font-size: 0.75rem;
+    color: grey;
+    font-weight: 400;
+}
+
+.price-over-time__breakdown {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 2rem;
+    /* color: #a7a593; */
+}
+
+.price__from-to {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+}
+
+.price__sentiment {
+    font-size: 1.3rem;
+    margin: 0;
+}
+
+.price__sentiment--good {
+    color: #0FAE78;
+}
+
+.price__sentiment--bad {
+    color: #FF564B;
+}
+
+.price__chart-container {
+    position: relative;
+    flex: 1;
+}
+
+.price__chart-container--overlay {
+    background-color: #ffffff;
+    opacity: 0.5;
+}
+
+.price__chart-overlay-text {
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    font-weight: 600;
+    z-index: 1;
+}
+
+.price__chart-overlay-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.5rem;
+    color: #0a251f;
+}
+
+.price__chart-overlay-cta {
+    font-weight: 400;
+    color: #a7a593;
+    margin: 0;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.price-over-time__container {
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.price-over-time__header {
+    flex: 1;
+}
+
+    
+
+
+.currency {
+
+}
+
+.currency__period {
+    text-transform: uppercase;
+    font-weight: 600;
+    font-size: 0.8rem;
+}
+
+.currency__value {
+    margin: 0;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
 }

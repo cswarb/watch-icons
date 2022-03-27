@@ -56,6 +56,9 @@ export const WatchLink = ({ id }: any) => {
     
     return (
         <StyledLi key={watch._id}>
+            <svg>
+                <text>Watch image here as background</text>
+            </svg>
             <Link className="nav__anchor"
                 to={`/watch/${watch._id}`}
                 state={{ background: getBackgroundColour(watch.make), color: '#000000' }}>{watch.model}</Link>

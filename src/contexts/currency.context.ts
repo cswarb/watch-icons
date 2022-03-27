@@ -16,7 +16,6 @@ export const CURRENCY_TOKEN = {
             symbol: '£',
             token: Currency.GBP
         }),
-    token: Currency.USD
 }
 
 export const CurrencyContext = React.createContext(CURRENCY_TOKEN);

@@ -25,7 +25,7 @@ export const PriceOverTimeAnimation = (props: any) => {
             height: 400,
             margin: {
                 top: 35,
-                right: 0,
+                right: 10,
                 bottom: 50,
                 left: 50,
             },
@@ -216,10 +216,11 @@ export const PriceOverTimeAnimation = (props: any) => {
                 .attr('fill', '#ffffff')
                 .attr('d', (d) => area(d))
         })
+        
         dataArea.selectAll('.area').data([dataset]).join((enter) => {
             return enter.append('path')
                 .attr('class', 'area')
-                .attr('fill', `url('#hatch-market')`)
+                .attr('fill', `url('#hatchMarket')`)
                 // .attr('fill', '#FE7701')
                 .attr('opacity', '0.5')
                 .attr('d', (d) => area(d))
@@ -231,18 +232,32 @@ export const PriceOverTimeAnimation = (props: any) => {
                 // });
         });
 
-        const area2 = d3.area()
-            .curve(d3.curveBumpX)
-            .x((d: any) => xScale(xAccessor(d)))
-            .y0((d: any) => yScale(yExtent[0]))
-            .y1((d: any) => yScale(yAccessor2(d)));
-
-        dataUnderlayArea.selectAll('.area-u-2').data([dataset]).join((enter) => {
+        dataArea.selectAll('.area-fade').data([dataset]).join((enter) => {
             return enter.append('path')
-                .attr('class', 'area2')
-                .attr('fill', '#ffffff')
-                .attr('d', (d) => area2(d))
-        })
+                .attr('class', 'area-fade')
+                .attr('fill', `url('#hatchFade')`)
+                .attr('opacity', '0.75')
+                .attr('d', (d) => area(d))
+            // .on('mouseenter', (e, d) => {
+            //     d3.select(e.target).attr('opacity', 0.9).raise();
+            // })
+            // .on('mouseleave', (e, d) => {
+            //     d3.select(e.target).attr('opacity', 0.5).lower();
+            // });
+        });
+
+        // const area2 = d3.area()
+        //     .curve(d3.curveBumpX)
+        //     .x((d: any) => xScale(xAccessor(d)))
+        //     .y0((d: any) => yScale(yExtent[0]))
+        //     .y1((d: any) => yScale(yAccessor2(d)));
+
+        // dataUnderlayArea.selectAll('.area-u-2').data([dataset]).join((enter) => {
+        //     return enter.append('path')
+        //         .attr('class', 'area2')
+        //         .attr('fill', '#ffffff')
+        //         .attr('d', (d) => area2(d))
+        // })
         // dataArea.selectAll('.area2').data([dataset]).join((enter) => {
         //     return enter.append('path')
         //         .attr('class', 'area2')
@@ -272,7 +287,7 @@ export const PriceOverTimeAnimation = (props: any) => {
                 .attr('class', 'line-1')
                 .attr('d', (d: any) => line1(d))
                 .attr('fill', 'transparent')
-                .attr('opacity', '0.75')
+                .attr('opacity', '1')
                 .attr('stroke', '#a7a593')
                 .attr('stroke-width', '2.5px')
         }, (update) => {
@@ -293,7 +308,7 @@ export const PriceOverTimeAnimation = (props: any) => {
                 .attr('d', (d: any) => line2(d))
                 .attr('fill', 'transparent')
                 .attr('pointer-events', 'none')
-                .attr('opacity', '0.75')
+                .attr('opacity', '0.8')
                 .attr('stroke', '#195649')
                 .attr('stroke-width', '2.5px')
         }, (update) => {
@@ -392,7 +407,7 @@ export const PriceOverTimeAnimation = (props: any) => {
 
         var color = d3.scaleOrdinal()
             .domain(keys)
-            .range(['#195649', `url('#hatch-market')`]);
+            .range(['#195649', `url('#hatchMarket')`]);
         var textColor = d3.scaleOrdinal()
             .domain(keys)
             .range(['#195649', '#a7a593']);
@@ -478,10 +493,15 @@ export const PriceOverTimeAnimation = (props: any) => {
                         <stop offset="0%" stopColor="#5472bc" />
                         <stop offset="100%" stopColor="#184ca9" />
                     </linearGradient>
-                    <pattern id="hatch-market" width="3" height="3" patternTransform="rotate(205)" patternUnits="userSpaceOnUse">
+                    <linearGradient id="hatchFade" gradientTransform="rotate(90)">
+                        <stop offset="0%" stopColor="#ffffff" stop-opacity="0" />
+                        <stop offset="50%" stopColor="#ffffff" stop-opacity="0" />
+                        <stop offset="100%" stopColor="#ffffff" stop-opacity="1" />
+                    </linearGradient>
+                    <pattern id="hatchMarket" width="3" height="3" patternTransform="rotate(205)" patternUnits="userSpaceOnUse">
                         <rect width="2" height="3" style={{fill: '#a7a593'}}></rect>
                     </pattern>
-                    <pattern id="hatch-rrp" width="3" height="3" patternTransform="rotate(205)" patternUnits="userSpaceOnUse">
+                    <pattern id="hatchRrp" width="3" height="3" patternTransform="rotate(205)" patternUnits="userSpaceOnUse">
                         <rect width="2" height="3" style={{ fill: '#a7a593' }}></rect>
                     </pattern>
                 </defs>
