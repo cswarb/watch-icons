@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ENTERING } from 'react-transition-group/Transition';
 import { debug } from '../../../shared/debug/debug';
 
-const MAIN_COLOR = '#315AFE';
+const MAIN_COLOR = '#D2DCE4';
 
 export const RrpAnimation = (props: any) => {
     console.log('PriceOverTimeAnimation');

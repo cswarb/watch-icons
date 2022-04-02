@@ -10,6 +10,9 @@ import { Logo } from '../logo/logo';
 const StyledNav = styled.nav`
     margin: 2rem;
     font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 `;
 
 const StyledUl = styled.ul`
@@ -22,9 +25,12 @@ const StyledUl = styled.ul`
 `;
 
 const StyledLi = styled.li`
-    margin: 0 2rem;
+    margin: 0 0.4rem;
     list-style: none;
     text-align: center;
+    font-size: 0.95rem;
+    font-weight: 400;
+    color: black;
 
     &:first-of-type {
         margin-left: 0;
@@ -34,10 +40,17 @@ const StyledLi = styled.li`
         margin-right: 0;
     }
 
-    a {
+    a, button {
+        font-size: 0.95rem;
+        font-weight: 400;
         color: black;
         text-decoration: none;
+        padding: 0;
     }
+
+     a:hover, button:hover {
+         cursor: pointer;
+     }
 `;
 
 export const getBackgroundColour = (watchMake: string): string => {
@@ -80,16 +93,14 @@ export const Nav = () => {
     return (
         <ThemeContext.Provider value={ Themes().default }>
             <StyledNav>
+                <Link className="nav__anchor" to="/" title="Home" state={{ background: '#FFFFFF', color: '#000000' }}>
+                    <Logo />
+                </Link>
+
                 <StyledUl>
                     <StyledLi>
-                        <Link className="nav__anchor" to="/" title="Home" state={{ background: '#FFFFFF', color: '#000000' }}>
-                            <Logo />
-                        </Link>
+                        <button onClick={() => setDropdownOpen(!dropdownOpen)}>Watches</button>
                     </StyledLi>
-
-                    <div>
-                        <button onClick={() => setDropdownOpen(!dropdownOpen)}>Watches ^</button>
-                    </div>
 
                     {
                         dropdownOpen && 

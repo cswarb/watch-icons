@@ -2,35 +2,39 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { getBackgroundColour } from '../nav/Nav';
+import { Card, CardContainer } from '../shared/card/card';
 import { WithPageContainer } from '../shared/page-container/PageContainer';
 import { selectWatchById } from '../store/watch/selectors';
 
-export const WatchItem = ({ item }: any) => {
+export const WatchItem = ({ item, i }: any) => {
     const watch = useSelector(state => selectWatchById(state, item));
+    const align = i % 2 === 0 ? 'left' : 'right';
+    const number = i + 1;
 
     return (
-        <li>
-            <Link
-                className="nav__anchor"
-                to={`/watch/${watch?._id}`}
-                state={{ background: '#ffffff' || getBackgroundColour(watch.make), color: 'white' }}>
-                {watch?.make} {watch?.model} '{watch?.shortname}'
-            </Link>
-        </li>
+                <div className="home__link-container">
+                    <span className="home__iterator">{number < 10 ? `0${number}` : number}.</span>
+                    <Link
+                        className="home__watch"
+                        to={`/watch/${watch?._id}`}
+                        state={{ background: '#ffffff' || getBackgroundColour(watch.make), color: 'white' }}>
+                        {watch?.make} {watch?.model}
+                    </Link>
+                </div>
     );
 }
 
 export const Home = ({ watchIds }: { watchIds: Array<string>}) => {
-    const list = watchIds.map((item) => { 
+    const list = watchIds.map((item, i) => { 
         return (
-            <WatchItem key={item} item={item} />
+            <WatchItem key={item} item={item} i={i} />
         )
     });
-
+    
     return (
-        <ul style={{margin: 0, padding: 0}}>
+        <div className="home__links">
             {list}
-        </ul>
+        </div>
     )
 }
 

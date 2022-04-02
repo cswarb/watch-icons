@@ -1,23 +1,28 @@
 import { useSelector } from 'react-redux';
 import { Card, CardContainer } from '../../shared/card/card';
+import { FormattedDate } from '../../shared/date/date';
 import { WatchReducerNoteableModels } from '../../store/watch/reducer';
 import { selectDerivedNoteableModelsById } from '../../store/watch/selectors';
 
-const NoteableModelItem = ({ noteableItem }: { noteableItem: WatchReducerNoteableModels }) => {
+const NoteableModelItem = ({ noteableItem, i }: { noteableItem: WatchReducerNoteableModels, i: number }) => {
+    const align = i % 2 === 0 ? 'left' : 'right';
+
     return (
-        <Card title={noteableItem.title} description={
+        <Card align={align} title={
             <>
-                <p>{noteableItem.description}</p>
-                <p>{noteableItem.date}</p>
+                <h3 className="card__title">{noteableItem.title}</h3> 
+                <span className="card__title-meta">
+                    <FormattedDate date={noteableItem.date} />
+                </span>
             </>
-        }>
+        } description={noteableItem.description}>
         </Card>
     )
 }
 
 const NoteableModelList = ({ noteableModels }: { noteableModels: Array<WatchReducerNoteableModels> }) => {
     const list = noteableModels.map((n, i) => {
-        return <NoteableModelItem key={`${n._id}-${i}`} noteableItem={n} />;
+        return <NoteableModelItem key={`${n._id}-${i}`} noteableItem={n} i={i} />;
     });
 
     return (
@@ -32,9 +37,9 @@ export const NoteableModels = ({ modelIds }: any) => {
     
     return (
         <>
-            <div className="watch-section-title">
+            <h2 className="watch-section-title">
                 Noteable models in the series
-            </div>
+            </h2>
 
             <NoteableModelList noteableModels={noteableModels} />
         </>

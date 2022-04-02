@@ -5,7 +5,10 @@ import { useEffect, useRef, useState } from 'react';
 import { ENTERING } from 'react-transition-group/Transition';
 import { debug } from '../../shared/debug/debug';
 
-export const PriceOverTimeAnimation = (props: any) => {
+const RRP_COLOR = '#072830';
+const MARKET_COLOR = '#a7a593';
+
+export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
     console.log('PriceOverTimeAnimation');
     const ref = useRef<any>();
     const [open, setOpen] = React.useState(false);
@@ -40,15 +43,19 @@ export const PriceOverTimeAnimation = (props: any) => {
 
         const svg = d3
             .select<any, any>(ref.current)
-            // .attr('width', dimensions.width)
-            // .attr('height', dimensions.height)
-            .attr("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
+            .attr('width', dimensions.width)
+            .attr('height', dimensions.height)
+            // .attr("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
 
         const stage = svg
             .append('g')
             .style('transform', `translate(${dimensions.margin.left}px, ${dimensions.margin.top}px)`);
 
         //x axis
+        const xScaleBar = d3.scaleBand()
+            .range([0, dimensions.width])
+            .domain(dataset.map(xAccessor));
+
         const xExtent = d3.extent(dataset.map(xAccessor)) as any;
         const xScale = d3.scaleTime().domain(xExtent).range([0, dimensions.boundedWidth])
         const xAxis = d3.axisBottom(xScale);
@@ -98,7 +105,102 @@ export const PriceOverTimeAnimation = (props: any) => {
             .attr('class', 'line-data');
 
         const tooltipArea = stage.append('g')
-            .attr('class', 'tooltip');
+            .attr('class', 'tooltip-area');
+
+        const tt: Element = ref.current.nextSibling.firstChild;
+
+        const drawTooltipIdentifierLine = (data: any) => {
+            tooltipArea
+                .append('line')
+                .attr('class', 'grid-line grid-line--tooltip')
+                .attr('x1', '0')
+                .attr('x2', '0')
+                .attr('y1', '0')
+                .attr('y2', dimensions.boundedHeight)
+                .attr('opacity', 0)
+        };
+
+        const drawTooltipAreas = (data: any) => {
+            tooltipArea
+                .selectAll('.hover-area')
+                .data(data)
+                .join((enter) => {
+                    return enter.append('rect')
+                        .classed('hover-area', true)
+                        .attr('fill', () => {
+                            return 'rgba(0,0,0,0)';
+                        })
+                        .attr('width', () => {
+                            return xScaleBar.bandwidth();
+                        })
+                        .attr('height', () => {
+                            return dimensions.boundedHeight;
+                        })
+                        .attr('x', (d: any) => {
+                            return xScale(xAccessor(d)) as any;
+                        })
+                        .attr('y', () => {
+                            return 0;
+                        })
+                        .on('mouseover touchstart', function (event: MouseEvent, d: any) {
+                            const { width, height } = tt.getBoundingClientRect();
+                            const touchPosition = d3.pointer(event);
+                            const xPos = touchPosition[0];
+                            const yPos = touchPosition[1];
+
+                            loadTooltipData(d);
+                            tt.classList.add('tooltip--show');
+
+                            (tt as any).style.transform = `translate(${xPos + dimensions.margin.right + dimensions.margin.left - (width / 2)}px, ${yPos - (height / 2)}px)`;
+
+                            d3
+                                .select('.grid-line--tooltip')
+                                .attr('opacity', 1)
+                                .raise()
+                                .attr('x1', (xScale(xAccessor(d)) as any) + 0.5 * xScaleBar.bandwidth())
+                                .attr('x2', (xScale(xAccessor(d)) as any) + 0.5 * xScaleBar.bandwidth());
+                        })
+                        .on('mousemove touchmove', function (event: MouseEvent, d) {
+                            const touchPosition = d3.pointer(event);
+                            const xPos = touchPosition[0];
+                            const yPos = touchPosition[1];
+                            const { width, height } = tt.getBoundingClientRect();
+
+                            (tt as any).style.transform = `translate(${xPos + dimensions.margin.right + dimensions.margin.left - (width / 2)}px, ${yPos - (height / 2)}px)`;
+
+                            d3
+                                .select('.grid-line--tooltip')
+                                .attr('opacity', 1)
+                                .raise()
+                                .attr('x1', (xScale(xAccessor(d)) as any) + 0.5 * xScaleBar.bandwidth())
+                                .attr('x2', (xScale(xAccessor(d)) as any) + 0.5 * xScaleBar.bandwidth());
+
+                            // _chart.chartContainer.select('.o-dash-line')
+                            //     .attr('opacity', 1)
+                            //     .attr('x1', _chart.xScale(d.date) + 0.5 * _chart.xScale.bandwidth())
+                            //     .attr('x2', _chart.xScale(d.date) + 0.5 * _chart.xScale.bandwidth())
+                        }, false)
+                        .on('mouseleave touchleave', function () {
+                            tt.classList.remove('tooltip--show');
+                           
+                            d3
+                                .select('.grid-line--tooltip')
+                                .attr('opacity', 0);
+                        }, true);
+                }, (update) => {
+                    return update.attr('width', () => {
+                        return xScaleBar.bandwidth();
+                    })
+                    .attr('x', (d: any) => {
+                        return xScaleBar(xAccessor(d)) as any;
+                    });
+                }, (exit) => {
+                    return exit.remove();
+                });
+        };
+
+        drawTooltipAreas(dataset);
+        drawTooltipIdentifierLine(dataset);
 
         //grid
         gridArea.selectAll('.grid-line').data(dataset).join((enter) => {
@@ -109,99 +211,11 @@ export const PriceOverTimeAnimation = (props: any) => {
                 .attr('y1', (d: any) => 0)
                 .attr('y2', (d: any) => dimensions.boundedHeight)
                 .attr('opacity', '1')
-                .attr('stroke', '#edf1f5')
         }, (update) => {
             return update;
         }, (exit) => {
             return exit;
         });
-
-        // dataArea.selectAll('.grid-line-2').data(dataset).join((enter) => {
-        //     return enter.append('line')
-        //         .attr('class', 'grid-line-2')
-        //         .attr('x1', (d: any) => 0)
-        //         .attr('x2', (d: any) => dimensions.boundedWidth)
-        //         .attr('y1', (d: any) => yScale(yAccessor1(d)))
-        //         .attr('y2', (d: any) => yScale(yAccessor1(d)))
-        //         .attr('opacity', '1')
-        //         .attr('stroke', '#edf1f5')
-        // }, (update) => {
-        //     return update;
-        // }, (exit) => {
-        //     return exit;
-        // });
-
-        //zero line
-        // dataArea.selectAll('.zero-line').data([dataset]).join((enter) => {
-        //     return enter.append('line')
-        //         .attr('class', 'zero-line')
-        //         .attr('stroke', '#dee2e7')
-        //         .attr('x1', '0')
-        //         .attr('x2', dimensions.boundedWidth)
-        //         .attr('y1', yScale(RRP))
-        //         .attr('y2', yScale(RRP))
-        // })
-
-        //generate gradient
-        // stage.selectAll('#myGradient2').data([dataset]).join((enter) => {
-        //     const linearG = enter
-        //         .append('defs')
-        //         .append('linearGradient')
-        //         .attr('id', 'myGradient2')
-        //         .attr('gradientTransform', 'rotate(90)')
-        //         .attr('x1', '0%')
-        //         .attr('x2', '100%')
-        //         .attr('y1', '0') //must the the same value to fade the graidient at the right point
-        //         .attr('y2', '0'); //must the the same value to fade the graidient at the right point
-
-        //     //top
-        //     linearG.append('stop')
-        //         .attr('offset', '0%')
-        //         .attr('stop-opacity', '1')
-        //         .attr('stop-color', '#4FB12C')
-
-        //     function getPercentbetweenRanges(x: number, min: number, max: number) {
-        //         const HIGH_PERCENT = 100;
-        //         const percentify = d3.format('.0%');
-        //         const pointInRange = ((x - min) / (max - min));
-        //         const res = (HIGH_PERCENT - (pointInRange * HIGH_PERCENT)) / HIGH_PERCENT;
-        //         return percentify(res);
-        //     }
-
-        //     linearG.append('stop')
-        //         .attr('offset', `${getPercentbetweenRanges(RRP, yExtent[0], yExtent[1])}`)
-        //         .attr('stop-opacity', '1')
-        //         .attr('stop-color', 'white')
-
-        //     //end
-        //     linearG.append('stop')
-        //         .attr('offset', '100%')
-        //         .attr('stop-opacity', '1')
-        //         .attr('stop-color', '#6D214F')
-
-        //     return linearG;
-        // });
-
-        // const area = d3.area()
-        //     .x((d: any) => xScale(xAccessor(d)))
-        //     .y0((d: any) => yScale(RRP))
-        //     .y1((d: any) => yScale(yAccessor1(d)));
-
-        // dataArea.selectAll('.area').data([dataset]).join((enter) => {
-        //     return enter.append('path')
-        //         .attr('class', 'area')
-        //         .attr('fill', 'transparent')
-        //         .attr('fill', 'url(#myGradient2)')
-        //         // .attr('clip-path', 'url(#svgPath)')
-        //         .attr('d', (d) => area(d))
-        // });
-
-
-
-
-
-
-
 
         //new area
         const area = d3.area()
@@ -221,15 +235,8 @@ export const PriceOverTimeAnimation = (props: any) => {
             return enter.append('path')
                 .attr('class', 'area')
                 .attr('fill', `url('#hatchMarket')`)
-                // .attr('fill', '#FE7701')
                 .attr('opacity', '0.5')
                 .attr('d', (d) => area(d))
-                // .on('mouseenter', (e, d) => {
-                //     d3.select(e.target).attr('opacity', 0.9).raise();
-                // })
-                // .on('mouseleave', (e, d) => {
-                //     d3.select(e.target).attr('opacity', 0.5).lower();
-                // });
         });
 
         dataArea.selectAll('.area-fade').data([dataset]).join((enter) => {
@@ -238,43 +245,7 @@ export const PriceOverTimeAnimation = (props: any) => {
                 .attr('fill', `url('#hatchFade')`)
                 .attr('opacity', '0.75')
                 .attr('d', (d) => area(d))
-            // .on('mouseenter', (e, d) => {
-            //     d3.select(e.target).attr('opacity', 0.9).raise();
-            // })
-            // .on('mouseleave', (e, d) => {
-            //     d3.select(e.target).attr('opacity', 0.5).lower();
-            // });
         });
-
-        // const area2 = d3.area()
-        //     .curve(d3.curveBumpX)
-        //     .x((d: any) => xScale(xAccessor(d)))
-        //     .y0((d: any) => yScale(yExtent[0]))
-        //     .y1((d: any) => yScale(yAccessor2(d)));
-
-        // dataUnderlayArea.selectAll('.area-u-2').data([dataset]).join((enter) => {
-        //     return enter.append('path')
-        //         .attr('class', 'area2')
-        //         .attr('fill', '#ffffff')
-        //         .attr('d', (d) => area2(d))
-        // })
-        // dataArea.selectAll('.area2').data([dataset]).join((enter) => {
-        //     return enter.append('path')
-        //         .attr('class', 'area2')
-        //         .attr('fill', 'transparent' || `url('#blueGradient')`)
-        //         // .attr('fill', '#1B57C2')
-        //         .attr('opacity', '0.5')
-        //         .attr('d', (d) => area2(d))
-        //         .on('mouseenter', (e, d) => {
-        //             d3.select(e.target).attr('opacity', 0.9).raise();
-        //         })
-        //         .on('mouseleave', (e, d) => {
-        //             d3.select(e.target).attr('opacity', 0.5).order();
-        //         });
-        // });
-
-
-
 
         //Lines
         const line1 = d3.line()
@@ -288,7 +259,7 @@ export const PriceOverTimeAnimation = (props: any) => {
                 .attr('d', (d: any) => line1(d))
                 .attr('fill', 'transparent')
                 .attr('opacity', '1')
-                .attr('stroke', '#a7a593')
+                .attr('stroke', `${MARKET_COLOR}`)
                 .attr('stroke-width', '2.5px')
         }, (update) => {
             return update;
@@ -309,15 +280,13 @@ export const PriceOverTimeAnimation = (props: any) => {
                 .attr('fill', 'transparent')
                 .attr('pointer-events', 'none')
                 .attr('opacity', '0.8')
-                .attr('stroke', '#195649')
+                .attr('stroke', `${RRP_COLOR}`)
                 .attr('stroke-width', '2.5px')
         }, (update) => {
             return update;
         }, (exit) => {
             return exit;
         });
-
-
 
         //Dots
         dataArea.selectAll('.dots').data(dataset).join((enter) => {
@@ -345,7 +314,6 @@ export const PriceOverTimeAnimation = (props: any) => {
              enter.append('circle')
                 .attr('class', 'dots-2')
                  .attr('fill', `url('#greenGradient')`)
-                // .attr('fill', '#1B57C2')
                 .attr('cx', (d) => xScale(xAccessor(d)))
                 .attr('cy', (d) => yScale(yAccessor2(d)))
                 .attr('r', '4');
@@ -360,61 +328,22 @@ export const PriceOverTimeAnimation = (props: any) => {
             return update;
         }, (exit) => {
             return exit;
-        });
-
-
-    //     .domain([...data.map(d => xAccessor(d))])
-    // .range([0, dimensions.boundedWidth]).paddingInner(0.02);
-
-        // const enterTransition = (enter: any): any => {
-        //     enter.transition()
-        //         .delay((d: any, i: number) => i * 200)
-        //         .duration(500)
-        //         .attr('opacity', 1)
-        //         .attr('height', (d: any) => dimensions.boundedHeight - yScale(yAccessor(d)))
-        // }
-
-        // //tooltips
-        // const xBarScale = d3.scaleBand().range([0, dimensions.boundedWidth]).domain(dataset);
-        // tooltipArea.selectAll('.tooltip-markers').data(dataset, (d: any) => d).join((enter) => {
-        //     return enter.append('rect')
-        //         .attr('class', 'tooltip-markers')
-        //         .attr('x', (d: any): any => xScale(xAccessor(d)))
-        //         .attr('y', (d: any) => 0)
-        //         .attr('width', xBarScale.bandwidth())
-        //         .attr('height', dimensions.boundedHeight)
-        //         .attr('fill', 'transparent')
-        //         .on('mouseenter', (e, d: any) => {
-        //             // setTooltipData(d);
-        //             // setOpen(true);
-        //         })
-        //         .on('mouseleave', (e, d: any) => {
-        //             // setTooltipData(null);
-        //             // setOpen(false);
-        //         });
-        // });
-
-
-
-        
-        
-
+        });     
 
         //Legend
         const legend = svg.append('g').classed('legend', true);
 
-        var keys = ["RRP", "Market Price"]
+        var keys = ['RRP', 'Market Price']
 
         var color = d3.scaleOrdinal()
             .domain(keys)
-            .range(['#195649', `url('#hatchMarket')`]);
+            .range([`${RRP_COLOR}`, `url('#hatchMarket')`]);
         var textColor = d3.scaleOrdinal()
             .domain(keys)
-            .range(['#195649', '#a7a593']);
+            .range([`${RRP_COLOR}`, `${MARKET_COLOR}`]);
 
-        
 
-        legend.selectAll(".legend-dot")
+        legend.selectAll('.legend-dot')
             .data(keys)
             .enter()
             .append('circle')
@@ -439,7 +368,6 @@ export const PriceOverTimeAnimation = (props: any) => {
             .text((d) => { return d })
             .attr('text-anchor', 'left')
             .style('alignment-baseline', 'middle')
-
     };
 
     useEffect(() => {
@@ -474,25 +402,24 @@ export const PriceOverTimeAnimation = (props: any) => {
     });
 
     return (
-        <div>
+        <div style={{
+            position: 'relative',
+            textAlign: 'center'
+        }}>
             <svg ref={ref}>
                 <defs>
                     <linearGradient id="goldGradient">
-                        <stop offset="0%" stopColor="#a7a593" />
-                        <stop offset="100%" stopColor="#a7a593" />
-                    </linearGradient>
-                    <linearGradient id="orangeGradient">
-                        <stop offset="0%" stopColor="#f79f60" />
-                        <stop offset="100%" stopColor="#FE7701" />
+                        <stop offset="0%" stopColor={MARKET_COLOR} />
+                        <stop offset="100%" stopColor={MARKET_COLOR} />
                     </linearGradient>
                     <linearGradient id="greenGradient">
-                        <stop offset="0%" stopColor="#195649" />
-                        <stop offset="100%" stopColor="#195649" />
+                        <stop offset="0%" stopColor={RRP_COLOR} />
+                        <stop offset="100%" stopColor={RRP_COLOR} />
                     </linearGradient>
-                    <linearGradient id="blueGradient">
+                    {/* <linearGradient id="blueGradient">
                         <stop offset="0%" stopColor="#5472bc" />
                         <stop offset="100%" stopColor="#184ca9" />
-                    </linearGradient>
+                    </linearGradient> */}
                     <linearGradient id="hatchFade" gradientTransform="rotate(90)">
                         <stop offset="0%" stopColor="#ffffff" stop-opacity="0" />
                         <stop offset="50%" stopColor="#ffffff" stop-opacity="0" />
@@ -507,15 +434,7 @@ export const PriceOverTimeAnimation = (props: any) => {
                 </defs>
             </svg>
 
-            <Tooltip open={open} title={
-                <>
-                    <p>Date: {tooltipData?.date}</p>
-                    <p>Market price: {tooltipData?.price}</p>
-                    <p>RRP: {tooltipData?.rrp}</p>
-                </>
-            }>
-                <p></p>
-            </Tooltip>
+            {props.children}
         </div>
     )
 }

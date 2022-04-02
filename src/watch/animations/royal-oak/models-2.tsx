@@ -5,7 +5,15 @@ import { useEffect, useRef, useState } from 'react';
 import { ENTERING } from 'react-transition-group/Transition';
 import { debug } from '../../../shared/debug/debug';
 
-const MAIN_COLOR = '#11CF82';
+const MAIN_COLORS = [
+    'red',
+    'blue',
+    'yellow',
+    'green',
+    'indigo',
+    'burntsienna',
+    'gold'
+];
 
 export const ModelsLineAnimation = (props: any) => {
     const ref = useRef<any>();
@@ -104,10 +112,9 @@ export const ModelsLineAnimation = (props: any) => {
         var keys = dataset.map((d: any) => { return d.key });
         console.log('test', allData, keys);
         
-        const COLOURS = ['#e41a1c', '#377eb8', '#4daf4a'];
         var color: any = d3.scaleOrdinal()
             .domain(keys)
-            .range(COLOURS);
+            .range(MAIN_COLORS);
 
         //grid
         gridArea.selectAll('.grid-line').data(allData, (d: any) => {
@@ -289,6 +296,42 @@ export const ModelsLineAnimation = (props: any) => {
                 { date: '2019-04-01', price: 16500,  },
                 { date: '2019-05-01', price: 19500,  },
             ] },
+            {
+                key: 'One', values: [
+                    { date: '2019-01-01', price: 75000, },
+                    { date: '2019-02-01', price: 76000, },
+                    { date: '2019-03-01', price: 74500, },
+                    { date: '2019-04-01', price: 82000, },
+                    { date: '2019-05-01', price: 79000, },
+                ]
+            },
+            {
+                key: 'Two', values: [
+                    { date: '2019-01-01', price: 35600, },
+                    { date: '2019-02-01', price: 34000, },
+                    { date: '2019-03-01', price: 36000, },
+                    { date: '2019-04-01', price: 36000, },
+                    { date: '2019-05-01', price: 40000, },
+                ]
+            },
+            {
+                key: 'Three', values: [
+                    { date: '2019-01-01', price: 26500, },
+                    { date: '2019-02-01', price: 26700, },
+                    { date: '2019-03-01', price: 27500, },
+                    { date: '2019-04-01', price: 28000, },
+                    { date: '2019-05-01', price: 29900, },
+                ]
+            },
+            {
+                key: 'Four', values: [
+                    { date: '2019-01-01', price: 18758, },
+                    { date: '2019-02-01', price: 18486, },
+                    { date: '2019-03-01', price: 20385, },
+                    { date: '2019-04-01', price: 21000, },
+                    { date: '2019-05-01', price: 23495, },
+                ]
+            },
         ];
         cb(data);
     });

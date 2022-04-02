@@ -73,6 +73,15 @@ export const selectWatchesById = createSelector(selectWatches, (watches) => {
     return watches.byId;
 });
 
+export const selectRandomWatch = createSelector(selectAllWatchesIds, selectWatchesById, (watches, watchById) => {
+    const maxLength = watches.length - 1;
+    const randomNum = Math.round(Math.random() * (maxLength - 0) + 0);
+    const randomWatchId = watches[randomNum];
+    //todo: get a random watch, but not the same watch as the one the user is on
+    //reroll...
+    return watchById.get(randomWatchId);
+});
+
 export const selectAllNoteableModelIds = createSelector(selectNoteableModels, (watches) => {
     return watches.allIds;
 });

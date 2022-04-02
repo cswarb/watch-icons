@@ -5,7 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ENTERING } from 'react-transition-group/Transition';
 import { debug } from '../../../shared/debug/debug';
 
-const MAIN_COLOR = '#FF7601';
+const MAIN_COLOR = '#FFAA7B';
 
 export const MarketPriceAnimation = (props: any) => {
     const ref = useRef<any>();

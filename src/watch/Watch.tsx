@@ -16,6 +16,12 @@ import { Chip } from '../shared/chip/chip';
 import { useSelector } from 'react-redux';
 import { selectBrandStatsById, selectWatchStatsById } from '../store/watch/selectors';
 import { debug } from '../shared/debug/debug';
+import { Outro } from './outro';
+import { WatchNavigation } from './watch-navigation';
+
+import { Faded } from 'baby-i-am-faded'
+import 'baby-i-am-faded/styles.css'
+import { Card } from '../shared/card/card';
 
 
 const DarkTooltip = styled(({ className, ...props }) => (
@@ -32,7 +38,6 @@ export const KeyStats = ({ brandStatsId }: any) => {
     const brandStats = useSelector(state => selectBrandStatsById(state, brandStatsId));
     console.log('brandStats: ', brandStats);
     
-
     return (
         <div>
             <div>
@@ -71,13 +76,24 @@ export const KeyStats = ({ brandStatsId }: any) => {
 
 export const ProductionTime = ({ watchStatsId }: any) => {
     const watchStats = useSelector(state => selectWatchStatsById(state, watchStatsId));
+    const months = ['Jan', 'Feb', 'March', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const formatDate = (date: string) => {
+        const d = new Date(date);
+        return date && `${d.getDate()} ${months[d.getMonth() - 1]}. ${d.getFullYear()}`;
+    };
+
+    const currentProductionModel = watchStats.productionYears.to >= new Date();
 
     return (
-        <>
-            <h2>Production years</h2>
-            <p>from: {watchStats.productionYears.from}</p>
-            <p>from: {watchStats.productionYears.to}</p>
-        </>
+        <Card title={
+            <>
+                { currentProductionModel ? 
+                    'A current production model since' + formatDate(watchStats.productionYears.from)
+                    : formatDate(watchStats.productionYears.from) + ' — ' + formatDate(watchStats.productionYears.to)
+                }
+            </>
+        }>
+        </Card>
     )
 }
 
@@ -90,28 +106,59 @@ export const Watch = ({ watch }: { watch: WatchReducerWatch}) => {
                     margin: '10rem 0 1rem 0'
                 }}>
                     {/* <WatchBrandFactory make={watch.make} /> */}
-                    <WatchName watchMake={watch.make} watchName={watch.model} />
 
-                    <WatchAnimationFactory model={watch.model} />
+                    {/* <Faded whenInView> */}
+                        <img width="200px" src="https://hackaday.com/wp-content/uploads/2015/11/total-gear-plan-composite-cropped.jpg" />
+
+                        <WatchName watchMake={watch.make} watchName={watch.model} />
+
+                        <WatchAnimationFactory model={watch.model} />
+                    {/* </Faded> */}
                 </div>
 
                 <div className="in-page-container">
                     {/* <KeyStats brandStatsId={watch.brandStatsId} /> */}
 
-                    <StatBar watchStatsId={watch.watchStatsId} />
+                    {/* <Faded whenInView> */}
+                        <StatBar watchStatsId={watch.watchStatsId} />
+                    {/* </Faded> */}
 
-                    <ProductionTime watchStatsId={watch.watchStatsId} />
+                    {/* <Faded whenInView> */}
+                        <ProductionTime watchStatsId={watch.watchStatsId} />
+                    {/* </Faded> */}
 
                     <div className="watch-section">
-                        <IconBreakdown breakdownIds={watch.breakdownIds} />
+                        {/* <Faded whenInView> */}
+                            <IconBreakdown breakdownIds={watch.breakdownIds} />
+                        {/* </Faded> */}
 
-                        <NoteableModels modelIds={watch.noteableModelIds} />
+                        <div className="gallery">
+                            <div className="gallery-item gallery-item-1"></div>
+                            <div className="gallery-item gallery-item-2"></div>
+                            <div className="gallery-item gallery-item-3"></div>
+                            <div className="gallery-item gallery-item-4"></div>
+                        </div>
+
+                        {/* <Faded whenInView> */}
+                            <NoteableModels modelIds={watch.noteableModelIds} />
+                        {/* </Faded> */}
 
                         <PriceOverTime priceId={watch.priceId} />
                     </div>
 
+                    <hr className="rule" />
+
+
+                    {/* <Faded whenInView> */}
+                        <Outro title={'Forever an icon'} description={'In short, an icon. The Royal Oak has the mechanical pedigree and unique indutrial design aesthetic to be revered as one of the most iconic sports watches of all time. It\'s popularity shows no sign of slowing down, even with an enormous modern catalogue of over 140 references. Examples like the current iteration 16202 Jumbo providing much needed modern features like a quick set date and improved power reserve serve as the modern take on this classic.'} />
+                    {/* </Faded> */}
+
                     {/* <Timeline /> */}
                 </div>
+
+                {/* <Faded whenInView> */}
+                    <WatchNavigation />
+                {/* </Faded> */}
             </>
         )
     )

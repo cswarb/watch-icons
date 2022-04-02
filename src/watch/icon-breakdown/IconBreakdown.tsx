@@ -2,21 +2,25 @@ import { useSelector } from 'react-redux';
 import { Card, CardContainer } from '../../shared/card/card';
 import { WatchReducerBreakdown } from '../../store/watch/reducer';
 import { selectDerivedBreakdownsById } from '../../store/watch/selectors';
+import { Faded } from 'baby-i-am-faded'
+import 'baby-i-am-faded/styles.css'
 
-const BreakdownItem = ({ breakdown }: { breakdown: WatchReducerBreakdown }) => {
+const BreakdownItem = ({ breakdown, i }: { breakdown: WatchReducerBreakdown, i: number }) => {
+    const align = i % 2 === 0 ? 'left' : 'right';
+
     return (
-        <Card title={breakdown.title} description={breakdown.description}></Card>
+        <Card align={align} title={breakdown.title} description={breakdown.description}></Card>
     )
 }
 
 const BreakdownList = ({ breakdowns }: { breakdowns: Array<WatchReducerBreakdown> }) => {
-    const list = breakdowns.map((b) => {
-        return <BreakdownItem key={b._id} breakdown={ b } />;
+    const list = breakdowns.map((b, i) => {
+        return <BreakdownItem key={b._id} breakdown={ b } i={i} />;
     });
 
     return (
         <CardContainer>
-            {list}
+                {list}
         </CardContainer>
     )
 }
@@ -26,9 +30,9 @@ export const IconBreakdown = ({ breakdownIds }: { breakdownIds: Array<string> })
 
     return (
         <div style={{}}>
-            <div className="watch-section-title">
-                Breakdown of why it is iconic
-            </div>
+            <h2 className="watch-section-title">
+                Breakdown of an icon
+            </h2>
 
             <BreakdownList breakdowns={breakdowns} />
         </div>
