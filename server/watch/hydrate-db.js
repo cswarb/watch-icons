@@ -1,4 +1,15 @@
 "use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -38,6 +49,110 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 exports.down = exports.up = void 0;
 var watch_model_1 = require("./watch.model");
+function watchCreator() {
+    return {
+        make: 'A Lange & Sohne',
+        model: 'Zeitwerk',
+        shortname: 'zeitwerk',
+        breakdown: [
+            {
+                title: 'A technical marvel',
+                description: 'The first mechnical watch to showcase a jumping digital display for hours and minutes. Jumping 1608 times a day to show hours and minutes accurately with a 6 o clock sub seconds, and features a power reserve indicator at 12 o clock. The Zeitwerk was an instant classic upon release, winning the GPHG award the same year, thanks to it\'s unqiue design and techical achievements which few watchmakers dare to attempt to copy, even to this day.'
+            },
+            {
+                title: 'Consistent improvement',
+                description: 'Powered by the Caliber L043.1 after years of development and updated throughout time to eliminate \'pre-arming\' of the digital display discs every minute, and drastically increasing the power reserve from 36 hours, to 72 hours via a stacked barrel design in the introduction of the Zeitwerk Date. The Zeitwerk uses a remontoir system to store and release the right amount of power every minute - power which is stored in the barrel, housing the thickest mainspring ALS produce that provides the required amount of torque. Excess power which is not needed is dumped via a wind break mechanism.'
+            },
+            {
+                title: 'Variations of an icon',
+                description: 'A range of more complicated Zeitwerk models have appeared over the years, including the striking time, minute repeater, and decimal strike models, as well as the introduction of a Date model, and the stylistic exclusive edition, and a personal grail, the Zeitwerk Lumen.'
+            }
+        ],
+        noteableModels: [
+            {
+                title: 'Lumen',
+                date: new Date(),
+                description: 'Smoked sapphire + luminous numerals, featuing the 3rd revision of the L043 calibre.'
+            },
+            {
+                title: 'Date',
+                date: new Date(),
+                description: 'Outer date ring with quick set pusher, and vastly improved power reserve from 36 to 72 hours.'
+            }
+        ],
+        price: {
+            rrp: {
+                from: {
+                    value: 36000,
+                    currency: 'GBP'
+                },
+                to: {
+                    value: 73300,
+                    currency: 'GBP'
+                }
+            },
+            market: {
+                from: {
+                    value: 36000,
+                    currency: 'GBP'
+                },
+                to: {
+                    value: 60000,
+                    currency: 'GBP'
+                }
+            }
+        },
+        watchStats: {
+            components: 100,
+            powerReserveHours: 65,
+            functions: [
+                {
+                    name: 'Hours'
+                },
+                {
+                    name: 'Minutes'
+                },
+                {
+                    name: 'Seconds'
+                },
+                {
+                    name: 'Date'
+                }
+            ],
+            productionNumbersPerYear: 1500,
+            productionYears: {
+                from: new Date(),
+                to: new Date()
+            }
+        },
+        brandStats: {
+            productionNumbersPerYear: 50000,
+            revenuePerYear: {
+                value: 14000000,
+                currency: 'USD'
+            },
+            location: 'Germany',
+            founding: new Date(),
+            noteableAchievements: [
+                {
+                    name: 'In 1864, introduced the three-quarter plate in his pocket watches.'
+                },
+                {
+                    name: 'In 1997, integrated zero-reset mechanism that stops the balance when the crown is pulled and instantaneously moves the seconds hand to the zero position.'
+                },
+            ],
+            socialActivity: {
+                instagram: {
+                    tagged: {
+                        name: '#lange',
+                        value: 5000000,
+                        date: new Date()
+                    }
+                }
+            }
+        }
+    };
+}
 var WATCH_DB_FIXTURE = function () {
     var ro = new watch_model_1.Watch({
         make: 'Audemars Piguet',
@@ -252,7 +367,36 @@ var WATCH_DB_FIXTURE = function () {
             }
         }
     });
-    return [ro, lange];
+    var submariner = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'Rolex', model: 'Submariner' }));
+    var speedmaster = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'Omega', model: 'Speedmaster' }));
+    var five905 = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'Patek Philippe', model: '5905' }));
+    var vc222 = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'Vacheron Constantin', model: '222' }));
+    var lm101 = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'MB&F', model: 'LM101' }));
+    var nautilus5740g = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'Patek Philippe', model: 'Nautilus' }));
+    var gfgmt = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'Greubel Forsey', model: 'GMT' }));
+    var rm055 = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'Richard Mille', model: 'RM055' }));
+    var daytona = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'Rolex', model: 'Daytona' }));
+    var datograph = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'A Lange & Sohne', model: 'Datograph' }));
+    var fifty270r = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'Patek Philippe', model: '5270R' }));
+    var rm030 = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'Richard Mille', model: 'RM030' }));
+    var six119g = new watch_model_1.Watch(__assign(__assign({}, watchCreator()), { make: 'Patek Philippe', model: '6119G' }));
+    return [
+        ro,
+        lange,
+        submariner,
+        speedmaster,
+        daytona,
+        lm101,
+        gfgmt,
+        datograph,
+        nautilus5740g,
+        six119g,
+        fifty270r,
+        five905,
+        rm030,
+        rm055,
+        vc222
+    ];
 };
 var up = function () { return __awaiter(void 0, void 0, void 0, function () {
     var removal, saved;

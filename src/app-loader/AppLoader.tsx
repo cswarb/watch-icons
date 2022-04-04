@@ -4,7 +4,7 @@ import { ServiceStatus } from '../store/watch/reducer';
 
 export const AppLoader = ({ loaderState }: { loaderState: ServiceStatus }) => {
     const loading = (state: ServiceStatus) => state === ServiceStatus.FETCHING;
-    const loaded = (state: ServiceStatus) => state === ServiceStatus.SUCCESS;
+    const loaded = (state: ServiceStatus) => state === ServiceStatus.SUCCESS || state === ServiceStatus.ERROR;
 
     return (
         <>

@@ -609,7 +609,7 @@ animation: shimmer 1s infinite;
     background-color: #072830;
     color: white;
     font-size: 0.7rem;
-    min-height: 20rem;
+    min-height: 17rem;
     display: flex;
     flex-flow: column nowrap;
     justify-content: space-between;
@@ -997,13 +997,13 @@ text {
 
 
 .home__watch {
-        font-size: 3.5rem;
-        color: #d7ece4;
-        
-        text-decoration: none;
-        font-weight: 800;
-        margin: 0 4rem 0 0;
-        position: relative;
+    font-size: 3.5rem;
+    color: #d7ece4;
+    text-decoration: none;
+    font-weight: 800;
+    margin: 0 1rem 0 0;
+    position: relative;
+    display: inline;
 }
 
 .home__watch:hover {
@@ -1011,24 +1011,15 @@ text {
     color: #072930;
 }
 
-.home__watch:before {
-    content: '';
-    width: 100%;
-    position: absolute;
-    background-color: black;
-    height: 10px;
-    display: block;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0;
+.home__watch--inactive {
+    pointer-events: none;
+    text-decoration: line-through;
+    opacity: 0.3;
 }
 
-/* .home__watch:hover:before {
-    opacity: 1;
-} */
-
 .home__links {
-        display: inline-block;
+    display: inline-block;
+    word-break: break-all;
 }
 
 .home__iterator {

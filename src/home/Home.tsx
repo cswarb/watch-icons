@@ -1,3 +1,4 @@
+import classNames from 'classnames';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
@@ -14,8 +15,11 @@ export const WatchItem = ({ item, i }: any) => {
     return (
                 <div className="home__link-container">
                     <span className="home__iterator">{number < 10 ? `0${number}` : number}.</span>
-                    <Link
-                        className="home__watch"
+                    <Link className={classNames('home__watch',
+                            {
+                                ['home__watch--inactive']: i > 1
+                            }
+                        )}
                         to={`/watch/${watch?._id}`}
                         state={{ background: '#ffffff' || getBackgroundColour(watch.make), color: 'white' }}>
                         {watch?.make} {watch?.model}
