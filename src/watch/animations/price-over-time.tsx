@@ -51,14 +51,34 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
             .append('g')
             .style('transform', `translate(${dimensions.margin.left}px, ${dimensions.margin.top}px)`);
 
-        //x axis
-        const xScaleBar = d3.scaleBand()
-            .range([0, dimensions.width])
-            .domain(dataset.map(xAccessor));
+        var formatMillisecond = d3.timeFormat(".%L"),
+            formatSecond = d3.timeFormat(":%S"),
+            formatMinute = d3.timeFormat("%I:%M"),
+            formatHour = d3.timeFormat("%I %p"),
+            formatDay = d3.timeFormat("%a %d"),
+            formatWeek = d3.timeFormat("%b %d"),
+            formatMonth = d3.timeFormat("%b"),
+            formatYear = d3.timeFormat("%Y");
 
+        function multiFormat(date: any) {
+            return (d3.timeSecond(date) < date ? formatMillisecond
+                : d3.timeMinute(date) < date ? formatSecond
+                : d3.timeHour(date) < date ? formatMinute
+                : d3.timeDay(date) < date ? formatHour
+                : d3.timeMonth(date) < date ? (d3.timeWeek(date) < date ? formatDay : formatWeek)
+                : d3.timeYear(date) < date ? formatMonth
+                : formatYear
+            )(date);
+        };
+
+        //x axis
         const xExtent = d3.extent(dataset.map(xAccessor)) as any;
-        const xScale = d3.scaleTime().domain(xExtent).range([0, dimensions.boundedWidth])
-        const xAxis = d3.axisBottom(xScale);
+        const defaultMultiScaleTimeFormatter: any = d3.scaleTime().domain(xExtent).tickFormat();
+
+        const xScale: any = d3.scaleBand()
+            .range([0, dimensions.boundedWidth])
+            .domain(dataset.map(xAccessor));
+        const xAxis = d3.axisBottom(xScale).tickFormat(multiFormat).tickPadding(10);
         const x = stage.append('g').attr('class', 'x-axis').attr('transform', `translate(0, ${dimensions.boundedHeight})`).call(xAxis);
 
         //y axis
@@ -131,7 +151,7 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                             return 'rgba(0,0,0,0)';
                         })
                         .attr('width', () => {
-                            return xScaleBar.bandwidth();
+                            return xScale.bandwidth();
                         })
                         .attr('height', () => {
                             return dimensions.boundedHeight;
@@ -157,8 +177,8 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                                 .select('.grid-line--tooltip')
                                 .attr('opacity', 1)
                                 .raise()
-                                .attr('x1', (xScale(xAccessor(d)) as any) + 0.5 * xScaleBar.bandwidth())
-                                .attr('x2', (xScale(xAccessor(d)) as any) + 0.5 * xScaleBar.bandwidth());
+                                .attr('x1', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2)
+                                .attr('x2', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2);
                         })
                         .on('mousemove touchmove', function (event: MouseEvent, d) {
                             const touchPosition = d3.pointer(event);
@@ -172,13 +192,8 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                                 .select('.grid-line--tooltip')
                                 .attr('opacity', 1)
                                 .raise()
-                                .attr('x1', (xScale(xAccessor(d)) as any) + 0.5 * xScaleBar.bandwidth())
-                                .attr('x2', (xScale(xAccessor(d)) as any) + 0.5 * xScaleBar.bandwidth());
-
-                            // _chart.chartContainer.select('.o-dash-line')
-                            //     .attr('opacity', 1)
-                            //     .attr('x1', _chart.xScale(d.date) + 0.5 * _chart.xScale.bandwidth())
-                            //     .attr('x2', _chart.xScale(d.date) + 0.5 * _chart.xScale.bandwidth())
+                                .attr('x1', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2)
+                                .attr('x2', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2);
                         }, false)
                         .on('mouseleave touchleave', function () {
                             tt.classList.remove('tooltip--show');
@@ -189,10 +204,10 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                         }, true);
                 }, (update) => {
                     return update.attr('width', () => {
-                        return xScaleBar.bandwidth();
+                        return xScale.bandwidth();
                     })
                     .attr('x', (d: any) => {
-                        return xScaleBar(xAccessor(d)) as any;
+                        return xScale(xAccessor(d));
                     });
                 }, (exit) => {
                     return exit.remove();
@@ -206,8 +221,8 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
         gridArea.selectAll('.grid-line').data(dataset).join((enter) => {
             return enter.append('line')
                 .attr('class', 'grid-line')
-                .attr('x1', (d: any) => xScale(xAccessor(d)))
-                .attr('x2', (d: any) => xScale(xAccessor(d)))
+                .attr('x1', (d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                .attr('x2', (d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
                 .attr('y1', (d: any) => 0)
                 .attr('y2', (d: any) => dimensions.boundedHeight)
                 .attr('opacity', '1')
@@ -220,7 +235,7 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
         //new area
         const area = d3.area()
             .curve(d3.curveBumpX)
-            .x((d: any) => xScale(xAccessor(d)))
+            .x((d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
             .y0((d: any) => yScale(yExtent[0]))
             .y1((d: any) => yScale(yAccessor1(d)));
 
@@ -250,7 +265,10 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
         //Lines
         const line1 = d3.line()
             .curve(d3.curveBumpX)
-            .x((d: any) => xScale(xAccessor(d)))
+            .defined((d: any) => {
+                return d && Boolean(d.price);
+            })
+            .x((d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
             .y((d: any) => yScale(yAccessor1(d)));
 
         dataArea.selectAll('.line-1').data([dataset]).join((enter) => {
@@ -270,7 +288,10 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
         //rrp line
         const line2 = d3.line()
             .curve(d3.curveBumpX)
-            .x((d: any) => xScale(xAccessor(d)))
+            .defined((d: any) => {
+                return d && Boolean(d.rrp);
+            })
+            .x((d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
             .y((d: any) => yScale(yAccessor2(d)));
 
         dataArea.selectAll('.line-2').data([dataset]).join((enter) => {
@@ -294,14 +315,14 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                 .attr('class', 'dots')
                 // .attr('fill', '#FE7701')
                 .attr('fill', `url('#goldGradient')`)
-                .attr('cx', (d) => xScale(xAccessor(d)))
+                .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
                 .attr('cy', (d) => yScale(yAccessor1(d)))
                 .attr('r', '4');
 
             return enter.append('circle')
                 .attr('class', 'dots dots-sub')
                 .attr('fill', 'white')
-                .attr('cx', (d) => xScale(xAccessor(d)))
+                .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
                 .attr('cy', (d) => yScale(yAccessor1(d)))
                 .attr('r', '2');
         }, (update) => {
@@ -314,14 +335,14 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
              enter.append('circle')
                 .attr('class', 'dots-2')
                  .attr('fill', `url('#greenGradient')`)
-                .attr('cx', (d) => xScale(xAccessor(d)))
+                .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
                 .attr('cy', (d) => yScale(yAccessor2(d)))
                 .attr('r', '4');
 
             return enter.append('circle')
                 .attr('class', 'dots-2 dots-2-sub')
                 .attr('fill', 'white')
-                .attr('cx', (d) => xScale(xAccessor(d)))
+                .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
                 .attr('cy', (d) => yScale(yAccessor2(d)))
                 .attr('r', '2');
         }, (update) => {
