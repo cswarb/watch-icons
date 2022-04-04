@@ -2,14 +2,11 @@ import Tooltip from '@mui/material/Tooltip';
 import * as d3 from 'd3';
 import React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { ENTERING } from 'react-transition-group/Transition';
-import { debug } from '../../shared/debug/debug';
 
 const RRP_COLOR = '#072830';
 const MARKET_COLOR = '#a7a593';
 
 export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
-    console.log('PriceOverTimeAnimation');
     const ref = useRef<any>();
     const [open, setOpen] = React.useState(false);
     const [tooltipData, setTooltipData]: [any, any] = useState(null);
@@ -72,13 +69,12 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
         };
 
         //x axis
-        const xExtent = d3.extent(dataset.map(xAccessor)) as any;
-        const defaultMultiScaleTimeFormatter: any = d3.scaleTime().domain(xExtent).tickFormat();
-
         const xScale: any = d3.scaleBand()
             .range([0, dimensions.boundedWidth])
             .domain(dataset.map(xAccessor));
-        const xAxis = d3.axisBottom(xScale).tickFormat(multiFormat).tickPadding(10);
+        const xAxis = d3.axisBottom(xScale)
+            .tickFormat(multiFormat)
+            .tickPadding(10);
         const x = stage.append('g').attr('class', 'x-axis').attr('transform', `translate(0, ${dimensions.boundedHeight})`).call(xAxis);
 
         //y axis
@@ -94,8 +90,11 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
 
         const ySpreadData = [...dataset.map(yAccessor1)];
         const yExtent = d3.extent(ySpreadData) as any;
-        const yScale = d3.scaleLinear().domain(yExtent).range([dimensions.boundedHeight, 0])
-        //.nice();
+        let yScale = d3.scaleLinear().domain(yExtent).range([dimensions.boundedHeight, 0]).nice();
+        const roundedHigh = yScale.domain()[1];
+        //Reset the domain to make sure the lower is clamped, but the higher is rounded
+        yScale = yScale.domain([yExtent[0], roundedHigh]);
+
         const yAxis = d3.axisLeft(yScale).tickFormat((v: any) => {
             let formattedValue: any = v;
             if (v > 999 && v < 100000) {
@@ -109,15 +108,10 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
             };
 
             return `${formatWithLocalisedValues(v)}`;
-        });
+        }).tickSizeInner(-dimensions.boundedWidth);
+
         const y = stage.append('g').attr('class', 'y-axis').call(yAxis);
         
-        const gridArea = stage.append('g')
-            .attr('class', 'grid');
-
-        const dataUnderlayArea = stage.append('g')
-            .attr('class', 'data-underlay');
-
         const dataArea = stage.append('g')
             .attr('class', 'data');
 
@@ -131,13 +125,22 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
 
         const drawTooltipIdentifierLine = (data: any) => {
             tooltipArea
-                .append('line')
-                .attr('class', 'grid-line grid-line--tooltip')
-                .attr('x1', '0')
-                .attr('x2', '0')
-                .attr('y1', '0')
-                .attr('y2', dimensions.boundedHeight)
-                .attr('opacity', 0)
+                .selectAll('.grid-line--tooltip')
+                .data([data])
+                .join((enter) => {
+                    return enter.append('line')
+                        .attr('class', 'grid-line grid-line--tooltip')
+                        .attr('x1', '0')
+                        .attr('x2', '0')
+                        .attr('y1', '0')
+                        .attr('y2', dimensions.boundedHeight)
+                        .attr('opacity', 0);
+                }, (update) => {
+                    return update
+                        .attr('y2', dimensions.boundedHeight);
+                }, (exit) => {
+                    return exit.remove();
+                });
         };
 
         const drawTooltipAreas = (data: any) => {
@@ -194,201 +197,221 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                                 .raise()
                                 .attr('x1', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2)
                                 .attr('x2', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2);
-                        }, false)
+                        })
                         .on('mouseleave touchleave', function () {
                             tt.classList.remove('tooltip--show');
                            
                             d3
                                 .select('.grid-line--tooltip')
                                 .attr('opacity', 0);
-                        }, true);
+                        });
                 }, (update) => {
                     return update.attr('width', () => {
                         return xScale.bandwidth();
                     })
+                    .attr('width', () => {
+                        return xScale.bandwidth();
+                    })
+                    .attr('height', () => {
+                        return dimensions.boundedHeight;
+                    })
                     .attr('x', (d: any) => {
-                        return xScale(xAccessor(d));
-                    });
+                        return xScale(xAccessor(d)) as any;
+                    })
                 }, (exit) => {
                     return exit.remove();
                 });
         };
 
-        drawTooltipAreas(dataset);
+        const drawArea = (data: any) => {
+            const area = d3.area()
+                .curve(d3.curveBumpX)
+                .x((d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                .y0((d: any) => yScale(yExtent[0]))
+                .y1((d: any) => yScale(yAccessor1(d)));
+
+            dataArea.selectAll('.area-u').data([data]).join((enter) => {
+                enter.append('path')
+                    .attr('class', 'area-u')
+                    .attr('fill', '#ffffff')
+                    .attr('d', (d) => area(d));
+
+                enter.append('path')
+                    .attr('class', 'area')
+                    .attr('fill', `url('#hatchMarket')`)
+                    .attr('opacity', '0.5')
+                    .attr('d', (d) => area(d));
+
+                return enter.append('path')
+                    .attr('class', 'area-fade')
+                    .attr('fill', `url('#hatchFade')`)
+                    .attr('opacity', '0.75')
+                    .attr('d', (d) => area(d))
+            }, (update) => {
+                update.select('.area-u').attr('d', (d) => area(d));
+                update.select('.area').attr('d', (d) => area(d));
+                return update.select('.area-fade').attr('d', (d) => area(d));
+            }, (exit) => {
+                exit.remove();
+            });
+        };
+
+        const drawLines = (data: any) => {
+            const line1 = d3.line()
+                .curve(d3.curveBumpX)
+                .defined((d: any) => {
+                    return d && Boolean(d.price);
+                })
+                .x((d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                .y((d: any) => yScale(yAccessor1(d)));
+
+            lineArea.selectAll('.line-1').data([data]).join((enter) => {
+                return enter.append('path')
+                    .attr('class', 'line-1')
+                    .attr('d', (d: any) => line1(d))
+                    .attr('fill', 'transparent')
+                    .attr('opacity', '1')
+                    .attr('stroke', `${MARKET_COLOR}`)
+                    .attr('stroke-width', '2.5px')
+            }, (update) => {
+                return update;
+            }, (exit) => {
+                return exit.remove();
+            });
+
+            //rrp line
+            const line2 = d3.line()
+                .curve(d3.curveBumpX)
+                .defined((d: any) => {
+                    return d && Boolean(d.rrp);
+                })
+                .x((d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                .y((d: any) => yScale(yAccessor2(d)));
+
+            lineArea.selectAll('.line-2').data([data]).join((enter) => {
+                return enter.append('path')
+                    .attr('class', 'line-2')
+                    .attr('d', (d: any) => line2(d))
+                    .attr('fill', 'transparent')
+                    .attr('pointer-events', 'none')
+                    .attr('opacity', '0.8')
+                    .attr('stroke', `${RRP_COLOR}`)
+                    .attr('stroke-width', '2.5px')
+            }, (update) => {
+                return update;
+            }, (exit) => {
+                return exit.remove();
+            });
+
+            //Dots
+            lineArea.selectAll('.dots').data(data).join((enter) => {
+                enter.append('circle')
+                    .attr('class', 'dots')
+                    .attr('fill', `url('#goldGradient')`)
+                    .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                    .attr('cy', (d) => yScale(yAccessor1(d)))
+                    .attr('r', '4');
+
+                return enter.append('circle')
+                    .attr('class', 'dots dots-sub')
+                    .attr('fill', 'white')
+                    .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                    .attr('cy', (d) => yScale(yAccessor1(d)))
+                    .attr('r', '2');
+            }, (update) => {
+                return update;
+            }, (exit) => {
+                return exit.remove();
+            });
+
+            lineArea.selectAll('.dots-2').data(data).join((enter) => {
+                enter.append('circle')
+                    .attr('class', 'dots-2')
+                    .attr('fill', `url('#greenGradient')`)
+                    .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                    .attr('cy', (d) => yScale(yAccessor2(d)))
+                    .attr('r', '4');
+
+                return enter.append('circle')
+                    .attr('class', 'dots-2 dots-2-sub')
+                    .attr('fill', 'white')
+                    .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                    .attr('cy', (d) => yScale(yAccessor2(d)))
+                    .attr('r', '2');
+            }, (update) => {
+                return update;
+            }, (exit) => {
+                return exit.remove();
+            });
+        };
+
+        const drawLegend = (data: any) => {
+            const legend = svg
+                .append('g')
+                .classed('legend', true);
+
+            var keys = ['RRP', 'Market Price']
+
+            var color = d3.scaleOrdinal()
+                .domain(keys)
+                .range([`${RRP_COLOR}`, `url('#hatchMarket')`]);
+            var textColor = d3.scaleOrdinal()
+                .domain(keys)
+                .range([`${RRP_COLOR}`, `${MARKET_COLOR}`]);
+
+            legend.selectAll('.legend-item')
+                .data(keys)
+                .join((enter) => {
+                    const item = enter.append('g').attr('class', 'legend-item');
+
+                    item.append('text')
+                        .attr('class', 'legend-label')
+                        .attr('x', (d: any, i: any) => xScale(xAccessor(dataset[dataset.length - 1])) - 75 + (i * 50))
+                        .attr('y', (d: any, i) => { return yScale(yExtent[0]) + 75 })
+                        .style('fill', (d: any) => {
+                            return textColor(d) as string;
+                        })
+                        .text((d) => d)
+                        .attr('text-anchor', 'left')
+                        .style('alignment-baseline', 'middle');
+
+                    return item.append('circle')
+                        .attr('class', 'legend-dot')
+                        .attr('cx', (d: any, i: any) => xScale(xAccessor(dataset[dataset.length - 1])) - 85 + (i * 50))
+                        .attr('cy', (d: any, i: any) => { return yScale(yExtent[0]) + 75 })
+                        .attr('r', 7)
+                        .style('fill', (d: any) => {
+                            return color(d) as string;
+                        });
+                }, (update) => {
+                    const group = update.selectAll('.legend-item') as any;
+                    const labels = group.selectAll('.legend-label') as any;
+                    const dots = group.selectAll('.legend-dot') as any;
+
+                    labels.text((d: any) => d)
+                        .attr('x', (d: any, i: number) => xScale(xAccessor(dataset[dataset.length - 1])) - 75 + (i * 50))
+                        .attr('y', (d: any, i: number) => { return yScale(yExtent[0]) + 75 })
+                        .style('fill', (d: any) => {
+                            return textColor(d) as string;
+                        });
+
+                    dots.attr('cx', (d: any, i: any) => xScale(xAccessor(dataset[dataset.length - 1])) - 85 + (i * 50))
+                        .attr('cy', (d: any, i: any) => { return yScale(yExtent[0]) + 75 })
+                        .style('fill', (d: any) => {
+                            return color(d) as string;
+                        });
+
+                    return group;
+                }, (exit) => {
+                    return exit.remove();
+                });
+        };
+
+        drawArea(dataset);
+        drawLines(dataset);
         drawTooltipIdentifierLine(dataset);
-
-        //grid
-        gridArea.selectAll('.grid-line').data(dataset).join((enter) => {
-            return enter.append('line')
-                .attr('class', 'grid-line')
-                .attr('x1', (d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-                .attr('x2', (d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-                .attr('y1', (d: any) => 0)
-                .attr('y2', (d: any) => dimensions.boundedHeight)
-                .attr('opacity', '1')
-        }, (update) => {
-            return update;
-        }, (exit) => {
-            return exit;
-        });
-
-        //new area
-        const area = d3.area()
-            .curve(d3.curveBumpX)
-            .x((d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-            .y0((d: any) => yScale(yExtent[0]))
-            .y1((d: any) => yScale(yAccessor1(d)));
-
-        dataUnderlayArea.selectAll('.area-u').data([dataset]).join((enter) => {
-            return enter.append('path')
-                .attr('class', 'area-u')
-                .attr('fill', '#ffffff')
-                .attr('d', (d) => area(d))
-        })
-        
-        dataArea.selectAll('.area').data([dataset]).join((enter) => {
-            return enter.append('path')
-                .attr('class', 'area')
-                .attr('fill', `url('#hatchMarket')`)
-                .attr('opacity', '0.5')
-                .attr('d', (d) => area(d))
-        });
-
-        dataArea.selectAll('.area-fade').data([dataset]).join((enter) => {
-            return enter.append('path')
-                .attr('class', 'area-fade')
-                .attr('fill', `url('#hatchFade')`)
-                .attr('opacity', '0.75')
-                .attr('d', (d) => area(d))
-        });
-
-        //Lines
-        const line1 = d3.line()
-            .curve(d3.curveBumpX)
-            .defined((d: any) => {
-                return d && Boolean(d.price);
-            })
-            .x((d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-            .y((d: any) => yScale(yAccessor1(d)));
-
-        dataArea.selectAll('.line-1').data([dataset]).join((enter) => {
-            return enter.append('path')
-                .attr('class', 'line-1')
-                .attr('d', (d: any) => line1(d))
-                .attr('fill', 'transparent')
-                .attr('opacity', '1')
-                .attr('stroke', `${MARKET_COLOR}`)
-                .attr('stroke-width', '2.5px')
-        }, (update) => {
-            return update;
-        }, (exit) => {
-            return exit;
-        });
-
-        //rrp line
-        const line2 = d3.line()
-            .curve(d3.curveBumpX)
-            .defined((d: any) => {
-                return d && Boolean(d.rrp);
-            })
-            .x((d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-            .y((d: any) => yScale(yAccessor2(d)));
-
-        dataArea.selectAll('.line-2').data([dataset]).join((enter) => {
-            return enter.append('path')
-                .attr('class', 'line-2')
-                .attr('d', (d: any) => line2(d))
-                .attr('fill', 'transparent')
-                .attr('pointer-events', 'none')
-                .attr('opacity', '0.8')
-                .attr('stroke', `${RRP_COLOR}`)
-                .attr('stroke-width', '2.5px')
-        }, (update) => {
-            return update;
-        }, (exit) => {
-            return exit;
-        });
-
-        //Dots
-        dataArea.selectAll('.dots').data(dataset).join((enter) => {
-            enter.append('circle')
-                .attr('class', 'dots')
-                // .attr('fill', '#FE7701')
-                .attr('fill', `url('#goldGradient')`)
-                .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-                .attr('cy', (d) => yScale(yAccessor1(d)))
-                .attr('r', '4');
-
-            return enter.append('circle')
-                .attr('class', 'dots dots-sub')
-                .attr('fill', 'white')
-                .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-                .attr('cy', (d) => yScale(yAccessor1(d)))
-                .attr('r', '2');
-        }, (update) => {
-            return update;
-        }, (exit) => {
-            return exit;
-        });
-
-        dataArea.selectAll('.dots-2').data(dataset).join((enter) => {
-             enter.append('circle')
-                .attr('class', 'dots-2')
-                 .attr('fill', `url('#greenGradient')`)
-                .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-                .attr('cy', (d) => yScale(yAccessor2(d)))
-                .attr('r', '4');
-
-            return enter.append('circle')
-                .attr('class', 'dots-2 dots-2-sub')
-                .attr('fill', 'white')
-                .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-                .attr('cy', (d) => yScale(yAccessor2(d)))
-                .attr('r', '2');
-        }, (update) => {
-            return update;
-        }, (exit) => {
-            return exit;
-        });     
-
-        //Legend
-        const legend = svg.append('g').classed('legend', true);
-
-        var keys = ['RRP', 'Market Price']
-
-        var color = d3.scaleOrdinal()
-            .domain(keys)
-            .range([`${RRP_COLOR}`, `url('#hatchMarket')`]);
-        var textColor = d3.scaleOrdinal()
-            .domain(keys)
-            .range([`${RRP_COLOR}`, `${MARKET_COLOR}`]);
-
-
-        legend.selectAll('.legend-dot')
-            .data(keys)
-            .enter()
-            .append('circle')
-            .attr('class', 'legend-dot')
-            .attr('cx', (d: any, i:any) => xScale(xAccessor(dataset[dataset.length - 1])) - 85 + (i * 50))
-            .attr('cy', (d: any, i: any) => { return yScale(yExtent[0]) + 70 })
-            .attr('r', 7)
-            .style('fill', (d: any) => {
-                return color(d) as string;
-             })
-
-        legend.selectAll('legend-label')
-            .data(keys)
-            .enter()
-            .append('text')
-            .attr('class', 'legend-label')
-            .attr('x', (d: any, i: any) => xScale(xAccessor(dataset[dataset.length - 1])) - 75  + (i * 50))
-            .attr('y', (d: any, i) => { return yScale(yExtent[0]) + 70 })
-            .style('fill', (d: any) => {
-                return textColor(d) as string;
-             })
-            .text((d) => { return d })
-            .attr('text-anchor', 'left')
-            .style('alignment-baseline', 'middle')
+        drawTooltipAreas(dataset);
+        drawLegend(dataset);
     };
 
     useEffect(() => {
@@ -437,10 +460,6 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                         <stop offset="0%" stopColor={RRP_COLOR} />
                         <stop offset="100%" stopColor={RRP_COLOR} />
                     </linearGradient>
-                    {/* <linearGradient id="blueGradient">
-                        <stop offset="0%" stopColor="#5472bc" />
-                        <stop offset="100%" stopColor="#184ca9" />
-                    </linearGradient> */}
                     <linearGradient id="hatchFade" gradientTransform="rotate(90)">
                         <stop offset="0%" stopColor="#ffffff" stop-opacity="0" />
                         <stop offset="50%" stopColor="#ffffff" stop-opacity="0" />
