@@ -7,7 +7,7 @@ import { debug } from '../../../shared/debug/debug';
 
 const MAIN_COLOR = '#11CF82';
 
-export const HypeAnimation = (props: any) => {
+export const AuctionAnimation = (props: any) => {
     const ref = useRef<any>();
     const [open, setOpen] = React.useState(false);
     const [tooltipData, setTooltipData]: [any, any] = useState(null);

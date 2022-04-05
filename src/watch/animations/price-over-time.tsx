@@ -191,7 +191,7 @@ export const PriceOverTimeAnimation = ({ data, loadTooltipData, ...props }: any)
                         .attr('y', () => {
                             return 0;
                         })
-                        .on('mouseover touchstart', function (event: MouseEvent, d: any) {
+                        .on('mouseover touchstart', (event: MouseEvent, d: any) => {
                             const { width, height } = tt.getBoundingClientRect();
                             const touchPosition = d3.pointer(event);
                             const xPos = touchPosition[0];
@@ -200,36 +200,87 @@ export const PriceOverTimeAnimation = ({ data, loadTooltipData, ...props }: any)
                             loadTooltipData(d);
                             tt.classList.add('tooltip--show');
 
-                            (tt as any).style.transform = `translate(${xPos + dimensions.margin.right + dimensions.margin.left - (width / 2)}px, ${yPos - (height / 2)}px)`;
+                            (tt as any).style.transform = `translate(${xPos - width + 10}px, ${yPos - (height)}px)`;
 
                             d3
                                 .select('.grid-line--tooltip')
                                 .attr('opacity', 1)
                                 .raise()
-                                .attr('x1', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2)
+                                .attr('x1', (c: any) => {
+                                    console.log('d1', d, xScale(xAccessor(d)) + (xScale.bandwidth() / 2));
+                                    
+                                    return xScale(xAccessor(d)) + (xScale.bandwidth() / 2)
+                                })
                                 .attr('x2', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2);
+
+                            const diffRect = d3.select('.point-diff-rect');
+                            diffRect.attr('fill', (c: any) => {
+                                const y1 = yScale(yAccessor1(d));
+                                const y2 = yScale(yAccessor2(d));
+                                const red = 'rgb(217 44 44 / 40%)';
+                                const green = 'rgb(29 197 76 / 40%)';
+                                return y1 <= y2 ? green : red;
+                            })
+                            .attr('height', (c: any) => {
+                                console.log('d', d, yScale(yAccessor1(d)));
+                                
+                                const y1 = yScale(yAccessor1(d));
+                                const y2 = yScale(yAccessor2(d));
+                                //take the diff between y1 and y2
+                                return y1 <= y2 ? y2 - y1 : y1 - y2;
+                            })
+                            .attr('x', (c: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2 - ((xScale.bandwidth() / 4) / 2))
+                            .attr('y', (c: any) => {
+                                const y1 = yScale(yAccessor1(d));
+                                const y2 = yScale(yAccessor2(d));
+                                //take the lesser value as the top
+                                return y1 <= y2 ? y1 : y2;
+                            }).attr('opacity', 1);
                         })
-                        .on('mousemove touchmove', function (event: MouseEvent, d: any) {
+                        .on('mousemove touchmove', (event: MouseEvent, d: any, i: number) => {
                             const touchPosition = d3.pointer(event);
                             const xPos = touchPosition[0];
                             const yPos = touchPosition[1];
                             const { width, height } = tt.getBoundingClientRect();
 
-                            (tt as any).style.transform = `translate(${xPos + dimensions.margin.right + dimensions.margin.left - (width / 2)}px, ${yPos - (height / 2)}px)`;
+                            (tt as any).style.transform = `translate(${xPos - width + 10}px, ${yPos - (height)}px)`;
 
                             d3
                                 .select('.grid-line--tooltip')
                                 .attr('opacity', 1)
                                 .raise()
-                                .attr('x1', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2)
+                                .attr('x1', xScale(xAccessor(d) as any) + xScale.bandwidth() / 2)
                                 .attr('x2', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2);
+
+                            const diffRect = d3.select('.point-diff-rect');
+                            diffRect.attr('fill', (c: any) => {
+                                const y1 = yScale(yAccessor1(d));
+                                const y2 = yScale(yAccessor2(d));
+                                const red = 'rgb(217 44 44 / 40%)';
+                                const green = 'rgb(29 197 76 / 40%)';
+                                return y1 <= y2 ? green : red;
+                            })
+                            .attr('height', (c: any) => {
+                                const y1 = yScale(yAccessor1(d));
+                                const y2 = yScale(yAccessor2(d));
+                                //take the diff between y1 and y2
+                                return y1 <= y2 ? y2 - y1 : y1 - y2;
+                            })
+                            .attr('x', (c: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2 - ((xScale.bandwidth() / 4) / 2))
+                            .attr('y', (c: any) => {
+                                const y1 = yScale(yAccessor1(d));
+                                const y2 = yScale(yAccessor2(d));
+                                //take the lesser value as the top
+                                return y1 <= y2 ? y1 : y2;
+                            }).attr('opacity', 1);
                         })
-                        .on('mouseleave touchleave', function () {
+                        .on('mouseleave touchleave', () => {
                             tt.classList.remove('tooltip--show');
                            
-                            d3
-                                .select('.grid-line--tooltip')
+                            d3.select('.grid-line--tooltip')
                                 .attr('opacity', 0);
+
+                            d3.select('.point-diff-rect').attr('opacity', 0);
                         });
                 }, (update: any) => {
                     return update.attr('width', () => {
@@ -256,22 +307,19 @@ export const PriceOverTimeAnimation = ({ data, loadTooltipData, ...props }: any)
                 .y0((d: any) => yScale(yExtent[0]))
                 .y1((d: any) => yScale(yAccessor1(d)));
 
-            dataArea.selectAll('g').data([data]).join((enter: any) => {
+            dataArea.selectAll('.all-area').data([data]).join((enter: any) => {
                 const g = enter;
-
-                const group = g.append('g');
+                const group = g.append('g').attr('class', 'all-area');
 
                 group.append('path')
                     .attr('class', 'area area-u')
                     .attr('fill', '#ffffff')
                     .attr('d', (d: any) => area(d));
-
                 group.append('path')
                     .attr('class', 'area area-d')
                     .attr('fill', `url('#hatchMarket')`)
                     .attr('opacity', '0.5')
                     .attr('d', (d: any) => area(d));
-
                 group.append('path')
                     .attr('class', 'area area-fade')
                     .attr('fill', `url('#hatchFade')`)
@@ -280,14 +328,24 @@ export const PriceOverTimeAnimation = ({ data, loadTooltipData, ...props }: any)
 
                 return group;
             }, (update: any) => {
-                console.log(update);
                 const u = update;
-                
                 u.select('.area-u').attr('d', (d: any) => area(d));
                 u.select('.area-d').attr('d', (d: any) => area(d));
                 u.select('.area-fade').attr('d', (d: any) => area(d));
-
                 return u;
+            }, (exit: any) => {
+                exit.remove();
+            });
+
+            dataArea.selectAll('.point-diff-rect').data([data]).join((enter: any) => {
+                return enter.append('rect')
+                    .attr('class', 'point-diff-rect')
+                    .attr('width', (d: any) => xScale.bandwidth() / 4)
+                    .attr('opacity', 0);
+            }, (update: any) => {
+                return update
+                    .attr('width', (d: any) => xScale.bandwidth() / 4)
+                    .attr('opacity', 0);
             }, (exit: any) => {
                 exit.remove();
             });

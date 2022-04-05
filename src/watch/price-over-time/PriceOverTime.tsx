@@ -5,7 +5,7 @@ import { Card, CardContainer } from '../../shared/card/card';
 import { Currency } from '../../shared/currency/Currency'
 import { selectPriceById } from '../../store/watch/selectors';
 import { PriceOverTimeAnimation } from '../animations/price-over-time';
-import { HypeAnimation } from '../animations/royal-oak/hype';
+import { AuctionAnimation } from '../animations/royal-oak/auction';
 import { MarketPriceAnimation } from '../animations/royal-oak/market';
 import { ModelsAnimation } from '../animations/royal-oak/models';
 import { ModelsLineAnimation } from '../animations/royal-oak/models-2';
@@ -143,9 +143,9 @@ export const PriceOverTime = ({ priceId }: any) => {
                     </footer>
                 </section>
 
-                {/* <section className="price-over-time__container">
+                <section className="price-over-time__container">
                     <header className="price-over-time__header">
-                        <h3 className="price__title">Hype <span className="price__sub-title">(Determined by search figures)</span></h3>
+                        <h3 className="price__title">Auction results <span className="price__sub-title">(various sources)</span></h3>
                         <div className="price__from-to">
                             <CurrencyContext.Provider value={CURRENCY_TOKEN}>
                                 <Currency time={'Release - 2018'} price={price.market.from.value} currency={price.market.from.currency} />
@@ -162,9 +162,9 @@ export const PriceOverTime = ({ priceId }: any) => {
                    </header>
 
                     <footer className="price__chart-container">
-                        <HypeAnimation />
+                        <AuctionAnimation />
                     </footer>
-                </section> */}
+                </section>
 
                 <section className="price-over-time__container">
                     <header className="price-over-time__header">

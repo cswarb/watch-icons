@@ -17,7 +17,7 @@ export const ModelsAnimation = (props: any) => {
             width: width,
             height: 300,
             margin: {
-                top: 10,
+                top: 40,
                 right: 10,
                 bottom: 50,
                 left: 100,
@@ -68,6 +68,7 @@ export const ModelsAnimation = (props: any) => {
 
         //y axis
         const ySpreadData = [...dataset.map(xAccessor)];
+        const yExtent = d3.extent(ySpreadData);
         const yScale: any = d3.scaleBand().domain(ySpreadData).range([dimensions.boundedHeight, 0]).padding(1);
         const yAxis = d3.axisLeft(yScale).tickPadding(5);
         const y = stage.append('g').attr('class', 'y-axis').call(yAxis);
@@ -77,6 +78,9 @@ export const ModelsAnimation = (props: any) => {
 
         const dataArea = stage.append('g')
             .attr('class', 'data');
+
+        const legend = stage.append('g')
+            .attr('class', 'legend');
 
         dataArea.selectAll('.line').data(dataset).join((enter) => {
             return enter.append('line')
@@ -96,6 +100,28 @@ export const ModelsAnimation = (props: any) => {
         //https://d3-graph-gallery.com/graph/custom_color.html
         //https://github.com/d3/d3-scale-chromatic
         var colorScale = d3.scaleSequential().domain(xExtent).interpolator(d3.interpolateYlOrRd);
+        const grd = stage.append('defs').append('linearGradient');
+        grd.attr('x1', '0%')
+            .attr('x2', '100%')
+            .attr('y1', '0%')
+            .attr('y2', '0%')
+            .attr('id', 'modelstsx');
+
+        const recty = stage.append('rect')
+            .attr('fill', (d: any) => {
+                return 'url(#modelstsx)';
+            })
+            .attr('width', dimensions.boundedWidth)
+            .attr('height', '10px')
+            .attr('x', '0')
+            .attr('y', '-25');
+
+        grd.selectAll('stop').data(xExtent).join((enter) => {
+            return enter.append('stop')
+            .attr('offset', (d: any, i: number) => {
+                return 100 * (i / (xExtent.length - 1)) + '%';
+            }).attr('stop-color', (d: any) => colorScale(d))
+        });
 
         dataArea.selectAll('.circle').data(dataset).join((enter) => {
             enter.append('circle')
