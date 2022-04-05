@@ -51,7 +51,7 @@ export const AuctionAnimation = (props: any) => {
         //x axis
         const xExtent = d3.extent(dataset.map(xAccessor)) as any;
         const xScale = d3.scaleTime().domain(xExtent).range([0, dimensions.boundedWidth])
-        const xAxis = d3.axisBottom(xScale);
+        const xAxis = d3.axisBottom(xScale).ticks(dataset.length);
         const x = stage.append('g').attr('class', 'x-axis').attr('transform', `translate(0, ${dimensions.boundedHeight})`).call(xAxis);
 
         //y axis

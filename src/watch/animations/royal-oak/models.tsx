@@ -17,7 +17,7 @@ export const ModelsAnimation = (props: any) => {
             width: width,
             height: 300,
             margin: {
-                top: 40,
+                top: 50,
                 right: 10,
                 bottom: 50,
                 left: 100,
@@ -47,8 +47,7 @@ export const ModelsAnimation = (props: any) => {
             "currency": ["£", ""],
         } as any;
         var localisedFormatter = d3.formatLocale(en_GB);
-        const formatWithLocalisedValues = localisedFormatter.format("$,.2r");
-        const xExtent = d3.extent([...dataset.map(yAccessor1), ...dataset.map(yAccessor2) ]) as any;
+        const xExtent = d3.extent([ ...dataset.map(yAccessor1), ...dataset.map(yAccessor2) ]) as any;
         const xScale = d3.scaleLinear().domain(xExtent).range([0, dimensions.boundedWidth]).nice();
         const xAxis = d3.axisBottom(xScale).tickFormat((v: any) => {
             let formattedValue: any = v;
@@ -62,8 +61,8 @@ export const ModelsAnimation = (props: any) => {
                 formattedValue = localisedFormatter.format('$,.3s')(v);
             };
 
-            return `${formatWithLocalisedValues(v)}`;
-        });;
+            return `${formattedValue}`;
+        }).ticks(dataset.length);
         const x = stage.append('g').attr('class', 'x-axis').attr('transform', `translate(0, ${dimensions.boundedHeight})`).call(xAxis);
 
         //y axis
@@ -89,7 +88,7 @@ export const ModelsAnimation = (props: any) => {
                 .attr('x2', (d: any) => xScale(yAccessor2(d)) )
                 .attr('y1', (d: any) => yScale(xAccessor(d))  )
                 .attr('y2', (d: any) => yScale(xAccessor(d))  )
-                .attr('stroke', MAIN_COLOR)
+                .attr('stroke', 'url(#modelstsx)')
                 .attr('stroke-width', '2px')
         }, (update) => {
             return update;
@@ -100,21 +99,22 @@ export const ModelsAnimation = (props: any) => {
         //https://d3-graph-gallery.com/graph/custom_color.html
         //https://github.com/d3/d3-scale-chromatic
         var colorScale = d3.scaleSequential().domain(xExtent).interpolator(d3.interpolateYlOrRd);
-        const grd = stage.append('defs').append('linearGradient');
+        const grd = legend.append('defs').append('linearGradient');
         grd.attr('x1', '0%')
             .attr('x2', '100%')
             .attr('y1', '0%')
             .attr('y2', '0%')
+            .attr('gradientUnits', 'userSpaceOnUse')
             .attr('id', 'modelstsx');
 
-        const recty = stage.append('rect')
+        const recty = legend.append('rect')
             .attr('fill', (d: any) => {
                 return 'url(#modelstsx)';
             })
             .attr('width', dimensions.boundedWidth)
             .attr('height', '10px')
             .attr('x', '0')
-            .attr('y', '-25');
+            .attr('y', -dimensions.margin.top / 1.5);
 
         grd.selectAll('stop').data(xExtent).join((enter) => {
             return enter.append('stop')
@@ -122,6 +122,11 @@ export const ModelsAnimation = (props: any) => {
                 return 100 * (i / (xExtent.length - 1)) + '%';
             }).attr('stop-color', (d: any) => colorScale(d))
         });
+
+        const keyLeftGroup = legend.append('g').attr('class', 'key key--left').attr('transform', `translate(0, ${-dimensions.margin.top / 5})`);
+        const keyRightGroup = legend.append('g').attr('class', 'key key--right').attr('transform', `translate(${dimensions.boundedWidth - 15}, ${-dimensions.margin.top / 5})`);
+        keyLeftGroup.append('text').text('$').attr('font-size', '0.6rem');
+        keyRightGroup.append('text').text('$$$').attr('font-size', '0.6rem');
 
         dataArea.selectAll('.circle').data(dataset).join((enter) => {
             enter.append('circle')
@@ -143,6 +148,37 @@ export const ModelsAnimation = (props: any) => {
         }, (exit) => {
             return exit;
         });
+
+
+        const drawLegend = (data: any) => {
+            var keys = ['Price']
+
+            legend.selectAll('.legend-item')
+                .data(keys)
+                .join((enter: any) => {
+                    const item = enter.append('g').attr('class', 'legend-item');
+
+                    return item.append('text')
+                        .attr('class', 'legend-label')
+                        .attr('x', (d: any, i: any) => dimensions.boundedWidth / 2)
+                        .attr('y', (d: any, i: any) => dimensions.boundedHeight + 35)
+                        .style('fill', 'black')
+                        .text((d: any) => d)
+                        .attr('text-anchor', 'left')
+                        .style('alignment-baseline', 'middle');
+                }, (update: any) => {
+                    const group = update.selectAll('.legend-item') as any;
+                    const labels = group.selectAll('.legend-label') as any;
+
+                    labels.text((d: any) => d);
+
+                    return group;
+                }, (exit: any) => {
+                    return exit.remove();
+                });
+        };
+
+        drawLegend(dataset);
     };
 
     useEffect(() => {
