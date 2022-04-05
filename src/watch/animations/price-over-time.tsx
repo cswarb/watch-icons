@@ -6,65 +6,110 @@ import { useEffect, useRef, useState } from 'react';
 const RRP_COLOR = '#072830';
 const MARKET_COLOR = '#a7a593';
 
-export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
+export const PriceOverTimeAnimation = ({ data, loadTooltipData, ...props }: any) => {
+    console.log('PriceOverTimeAnimation');
+    
     const ref = useRef<any>();
-    const [open, setOpen] = React.useState(false);
-    const [tooltipData, setTooltipData]: [any, any] = useState(null);
+    // const [open, setOpen] = React.useState(false);
+    // const [tooltipData, setTooltipData]: [any, any] = useState(null);
 
-    function cb(dataset: any): void {
-        var parseTime = d3.timeParse('%Y-%m-%d');
+    let parseTime = d3.timeParse('%Y-%m-%d');
+    const xAccessor = (d: any): any => parseTime(d.date);
+    const yAccessor1 = (d: any) => d.price;
+    const yAccessor2 = (d: any) => d.rrp;
 
-        const xAccessor = (d: any): any => parseTime(d.date);
-        const yAccessor1 = (d: any) => d.price;
-        const yAccessor2 = (d: any) => d.rrp;
+    //2: Setup boundaries
+    const width = 1000;
+    let dimensions: any = {
+        width: width,
+        height: 400,
+        margin: {
+            top: 35,
+            right: 10,
+            bottom: 50,
+            left: 50,
+        },
+    };
 
-        //2: Setup boundaries
-        const width = 1000;
-        let dimensions: any = {
-            width: width,
-            height: 400,
-            margin: {
-                top: 35,
-                right: 10,
-                bottom: 50,
-                left: 50,
-            },
-        };
+    dimensions.boundedWidth = dimensions.width
+        - dimensions.margin.left
+        - dimensions.margin.right;
+    dimensions.boundedHeight = dimensions.height
+        - dimensions.margin.top
+        - dimensions.margin.bottom;
 
-        dimensions.boundedWidth = dimensions.width
-            - dimensions.margin.left
-            - dimensions.margin.right;
-        dimensions.boundedHeight = dimensions.height
-            - dimensions.margin.top
-            - dimensions.margin.bottom;
+    var formatMillisecond = d3.timeFormat(".%L"),
+        formatSecond = d3.timeFormat(":%S"),
+        formatMinute = d3.timeFormat("%I:%M"),
+        formatHour = d3.timeFormat("%I %p"),
+        formatDay = d3.timeFormat("%a %d"),
+        formatWeek = d3.timeFormat("%b %d"),
+        formatMonth = d3.timeFormat("%b"),
+        formatYear = d3.timeFormat("%Y");
 
+    //formatting
+    var en_GB = {
+        "decimal": ".",
+        "thousands": ",",
+        "grouping": [3],
+        "currency": ["£", ""],
+    } as any;
+    var localisedFormatter = d3.formatLocale(en_GB);
+    const formatWithLocalisedValues = localisedFormatter.format("$,.2r");
+
+    useEffect(() => {
+        console.log('initChart');
+        initChart();
+    }, []);
+
+    useEffect(() => {
+        console.log('updateChart');
+        updateChart(data);
+    }, [data]);
+
+    function initChart() {
         const svg = d3
             .select<any, any>(ref.current)
             .attr('width', dimensions.width)
             .attr('height', dimensions.height)
-            // .attr("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
+        // .attr("viewBox", `0 0 ${dimensions.width} ${dimensions.height}`);
 
         const stage = svg
             .append('g')
+            .attr('class', 'stage')
             .style('transform', `translate(${dimensions.margin.left}px, ${dimensions.margin.top}px)`);
 
-        var formatMillisecond = d3.timeFormat(".%L"),
-            formatSecond = d3.timeFormat(":%S"),
-            formatMinute = d3.timeFormat("%I:%M"),
-            formatHour = d3.timeFormat("%I %p"),
-            formatDay = d3.timeFormat("%a %d"),
-            formatWeek = d3.timeFormat("%b %d"),
-            formatMonth = d3.timeFormat("%b"),
-            formatYear = d3.timeFormat("%Y");
+        const xAxis = stage.append('g').attr('class', 'x-axis').attr('transform', `translate(0, ${dimensions.boundedHeight})`);
+        const yAxis = stage.append('g').attr('class', 'y-axis');
+        const dataArea = stage.append('g')
+            .attr('class', 'data');
+        const lineArea = stage.append('g')
+            .attr('class', 'line-data');
+        const tooltipArea = stage.append('g')
+            .attr('class', 'tooltip-area');
+        const legend = svg
+            .append('g')
+            .classed('legend', true);
+    };
+
+    function updateChart(dataset: any): void {
+        const st: any = d3.select(ref.current);
+        const stage = st.select('.stage');
+        const x = stage.select('.x-axis');
+        const y = stage.select('.y-axis');
+        const dataArea = stage.select('.data');
+        const lineArea = stage.select('.line-data');
+        const tooltipArea = stage.select('.tooltip-area');
+        const legend = st.select('.legend');
 
         function multiFormat(date: any) {
             return (d3.timeSecond(date) < date ? formatMillisecond
                 : d3.timeMinute(date) < date ? formatSecond
-                : d3.timeHour(date) < date ? formatMinute
-                : d3.timeDay(date) < date ? formatHour
-                : d3.timeMonth(date) < date ? (d3.timeWeek(date) < date ? formatDay : formatWeek)
-                : d3.timeYear(date) < date ? formatMonth
-                : formatYear
+                    : d3.timeHour(date) < date ? formatMinute
+                        : d3.timeDay(date) < date ? formatHour
+                            : d3.timeMonth(date) < date ? (d3.timeWeek(date) < date ? formatDay : formatWeek)
+                                : d3.timeYear(date) < date ? formatMonth
+                                    : formatYear
             )(date);
         };
 
@@ -75,19 +120,9 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
         const xAxis = d3.axisBottom(xScale)
             .tickFormat(multiFormat)
             .tickPadding(10);
-        const x = stage.append('g').attr('class', 'x-axis').attr('transform', `translate(0, ${dimensions.boundedHeight})`).call(xAxis);
+        x.call(xAxis);
 
         //y axis
-        //formatting
-        var en_GB = {
-            "decimal": ".",
-            "thousands": ",",
-            "grouping": [3],
-            "currency": ["£", ""],
-        } as any;
-        var localisedFormatter = d3.formatLocale(en_GB);
-        const formatWithLocalisedValues = localisedFormatter.format("$,.2r");
-
         const ySpreadData = [...dataset.map(yAccessor1)];
         const yExtent = d3.extent(ySpreadData) as any;
         let yScale = d3.scaleLinear().domain(yExtent).range([dimensions.boundedHeight, 0]).nice();
@@ -110,24 +145,15 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
             return `${formatWithLocalisedValues(v)}`;
         }).tickSizeInner(-dimensions.boundedWidth);
 
-        const y = stage.append('g').attr('class', 'y-axis').call(yAxis);
+        y.call(yAxis);
         
-        const dataArea = stage.append('g')
-            .attr('class', 'data');
-
-        const lineArea = stage.append('g')
-            .attr('class', 'line-data');
-
-        const tooltipArea = stage.append('g')
-            .attr('class', 'tooltip-area');
-
         const tt: Element = ref.current.nextSibling.firstChild;
 
         const drawTooltipIdentifierLine = (data: any) => {
             tooltipArea
                 .selectAll('.grid-line--tooltip')
                 .data([data])
-                .join((enter) => {
+                .join((enter: any) => {
                     return enter.append('line')
                         .attr('class', 'grid-line grid-line--tooltip')
                         .attr('x1', '0')
@@ -135,10 +161,10 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                         .attr('y1', '0')
                         .attr('y2', dimensions.boundedHeight)
                         .attr('opacity', 0);
-                }, (update) => {
+                }, (update: any) => {
                     return update
                         .attr('y2', dimensions.boundedHeight);
-                }, (exit) => {
+                }, (exit: any) => {
                     return exit.remove();
                 });
         };
@@ -147,7 +173,7 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
             tooltipArea
                 .selectAll('.hover-area')
                 .data(data)
-                .join((enter) => {
+                .join((enter: any) => {
                     return enter.append('rect')
                         .classed('hover-area', true)
                         .attr('fill', () => {
@@ -183,7 +209,7 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                                 .attr('x1', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2)
                                 .attr('x2', (xScale(xAccessor(d)) as any) + xScale.bandwidth() / 2);
                         })
-                        .on('mousemove touchmove', function (event: MouseEvent, d) {
+                        .on('mousemove touchmove', function (event: MouseEvent, d: any) {
                             const touchPosition = d3.pointer(event);
                             const xPos = touchPosition[0];
                             const yPos = touchPosition[1];
@@ -205,7 +231,7 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                                 .select('.grid-line--tooltip')
                                 .attr('opacity', 0);
                         });
-                }, (update) => {
+                }, (update: any) => {
                     return update.attr('width', () => {
                         return xScale.bandwidth();
                     })
@@ -218,7 +244,7 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                     .attr('x', (d: any) => {
                         return xScale(xAccessor(d)) as any;
                     })
-                }, (exit) => {
+                }, (exit: any) => {
                     return exit.remove();
                 });
         };
@@ -230,28 +256,39 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                 .y0((d: any) => yScale(yExtent[0]))
                 .y1((d: any) => yScale(yAccessor1(d)));
 
-            dataArea.selectAll('.area-u').data([data]).join((enter) => {
-                enter.append('path')
-                    .attr('class', 'area-u')
-                    .attr('fill', '#ffffff')
-                    .attr('d', (d) => area(d));
+            dataArea.selectAll('g').data([data]).join((enter: any) => {
+                const g = enter;
 
-                enter.append('path')
-                    .attr('class', 'area')
+                const group = g.append('g');
+
+                group.append('path')
+                    .attr('class', 'area area-u')
+                    .attr('fill', '#ffffff')
+                    .attr('d', (d: any) => area(d));
+
+                group.append('path')
+                    .attr('class', 'area area-d')
                     .attr('fill', `url('#hatchMarket')`)
                     .attr('opacity', '0.5')
-                    .attr('d', (d) => area(d));
+                    .attr('d', (d: any) => area(d));
 
-                return enter.append('path')
-                    .attr('class', 'area-fade')
+                group.append('path')
+                    .attr('class', 'area area-fade')
                     .attr('fill', `url('#hatchFade')`)
                     .attr('opacity', '0.75')
-                    .attr('d', (d) => area(d))
-            }, (update) => {
-                update.select('.area-u').attr('d', (d) => area(d));
-                update.select('.area').attr('d', (d) => area(d));
-                return update.select('.area-fade').attr('d', (d) => area(d));
-            }, (exit) => {
+                    .attr('d', (d: any) => area(d));
+
+                return group;
+            }, (update: any) => {
+                console.log(update);
+                const u = update;
+                
+                u.select('.area-u').attr('d', (d: any) => area(d));
+                u.select('.area-d').attr('d', (d: any) => area(d));
+                u.select('.area-fade').attr('d', (d: any) => area(d));
+
+                return u;
+            }, (exit: any) => {
                 exit.remove();
             });
         };
@@ -265,7 +302,7 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                 .x((d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
                 .y((d: any) => yScale(yAccessor1(d)));
 
-            lineArea.selectAll('.line-1').data([data]).join((enter) => {
+            lineArea.selectAll('.line-1').data([data]).join((enter: any) => {
                 return enter.append('path')
                     .attr('class', 'line-1')
                     .attr('d', (d: any) => line1(d))
@@ -273,9 +310,9 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                     .attr('opacity', '1')
                     .attr('stroke', `${MARKET_COLOR}`)
                     .attr('stroke-width', '2.5px')
-            }, (update) => {
-                return update;
-            }, (exit) => {
+            }, (update: any) => {
+                return update.attr('d', (d: any) => line1(d));
+            }, (exit: any) => {
                 return exit.remove();
             });
 
@@ -288,7 +325,7 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                 .x((d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
                 .y((d: any) => yScale(yAccessor2(d)));
 
-            lineArea.selectAll('.line-2').data([data]).join((enter) => {
+            lineArea.selectAll('.line-2').data([data]).join((enter: any) => {
                 return enter.append('path')
                     .attr('class', 'line-2')
                     .attr('d', (d: any) => line2(d))
@@ -297,59 +334,49 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                     .attr('opacity', '0.8')
                     .attr('stroke', `${RRP_COLOR}`)
                     .attr('stroke-width', '2.5px')
-            }, (update) => {
-                return update;
-            }, (exit) => {
+            }, (update: any) => {
+                return update.attr('d', (d: any) => line2(d));
+            }, (exit: any) => {
                 return exit.remove();
             });
 
             //Dots
-            lineArea.selectAll('.dots').data(data).join((enter) => {
-                enter.append('circle')
-                    .attr('class', 'dots')
-                    .attr('fill', `url('#goldGradient')`)
-                    .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-                    .attr('cy', (d) => yScale(yAccessor1(d)))
-                    .attr('r', '4');
-
+            lineArea.selectAll('.dots').data(data).join((enter: any) => {
                 return enter.append('circle')
-                    .attr('class', 'dots dots-sub')
-                    .attr('fill', 'white')
-                    .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-                    .attr('cy', (d) => yScale(yAccessor1(d)))
-                    .attr('r', '2');
-            }, (update) => {
-                return update;
-            }, (exit) => {
+                    .attr('class', 'dots')
+                    .attr('stroke', `url('#goldGradient')`)
+                    .attr('stroke-width', `2px`)
+                    .attr('fill', `#ffffff`)
+                    .attr('cx', (d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                    .attr('cy', (d: any) => yScale(yAccessor1(d)))
+                    .attr('r', '4');
+            }, (update: any) => {
+                return update
+                    .attr('cx', (d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                    .attr('cy', (d: any) => yScale(yAccessor1(d)));
+            }, (exit: any) => {
                 return exit.remove();
             });
 
-            lineArea.selectAll('.dots-2').data(data).join((enter) => {
-                enter.append('circle')
-                    .attr('class', 'dots-2')
-                    .attr('fill', `url('#greenGradient')`)
-                    .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-                    .attr('cy', (d) => yScale(yAccessor2(d)))
-                    .attr('r', '4');
-
+            lineArea.selectAll('.dots-2').data(data).join((enter: any) => {
                 return enter.append('circle')
-                    .attr('class', 'dots-2 dots-2-sub')
-                    .attr('fill', 'white')
-                    .attr('cx', (d) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
-                    .attr('cy', (d) => yScale(yAccessor2(d)))
-                    .attr('r', '2');
-            }, (update) => {
-                return update;
-            }, (exit) => {
+                    .attr('class', 'dots-2')
+                    .attr('fill', `#ffffff`)
+                    .attr('stroke', `url('#greenGradient')`)
+                    .attr('stroke-width', `2px`)
+                    .attr('cx', (d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                    .attr('cy', (d: any) => yScale(yAccessor2(d)))
+                    .attr('r', '4');
+            }, (update: any) => {
+                return update
+                    .attr('cx', (d: any) => xScale(xAccessor(d)) + xScale.bandwidth() / 2)
+                    .attr('cy', (d: any) => yScale(yAccessor2(d)));
+            }, (exit: any) => {
                 return exit.remove();
             });
         };
 
         const drawLegend = (data: any) => {
-            const legend = svg
-                .append('g')
-                .classed('legend', true);
-
             var keys = ['RRP', 'Market Price']
 
             var color = d3.scaleOrdinal()
@@ -361,17 +388,17 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
 
             legend.selectAll('.legend-item')
                 .data(keys)
-                .join((enter) => {
+                .join((enter: any) => {
                     const item = enter.append('g').attr('class', 'legend-item');
 
                     item.append('text')
                         .attr('class', 'legend-label')
                         .attr('x', (d: any, i: any) => xScale(xAccessor(dataset[dataset.length - 1])) - 75 + (i * 50))
-                        .attr('y', (d: any, i) => { return yScale(yExtent[0]) + 75 })
+                        .attr('y', (d: any, i: any) => { return yScale(yExtent[0]) + 75 })
                         .style('fill', (d: any) => {
                             return textColor(d) as string;
                         })
-                        .text((d) => d)
+                        .text((d: any) => d)
                         .attr('text-anchor', 'left')
                         .style('alignment-baseline', 'middle');
 
@@ -383,7 +410,7 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                         .style('fill', (d: any) => {
                             return color(d) as string;
                         });
-                }, (update) => {
+                }, (update: any) => {
                     const group = update.selectAll('.legend-item') as any;
                     const labels = group.selectAll('.legend-label') as any;
                     const dots = group.selectAll('.legend-dot') as any;
@@ -402,7 +429,7 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
                         });
 
                     return group;
-                }, (exit) => {
+                }, (exit: any) => {
                     return exit.remove();
                 });
         };
@@ -413,37 +440,6 @@ export const PriceOverTimeAnimation = ({ loadTooltipData, ...props }: any) => {
         drawTooltipAreas(dataset);
         drawLegend(dataset);
     };
-
-    useEffect(() => {
-        const data: any[] = [
-            { date: '2018-06-01', price: 9000, rrp: 8000 },
-            { date: '2018-07-01', price: 8250, rrp: 8000 },
-            { date: '2018-08-01', price: 8500, rrp: 8000 },
-            { date: '2018-09-01', price: 9500, rrp: 8000 },
-            { date: '2018-10-01', price: 7500, rrp: 8000 },
-            { date: '2018-11-01', price: 5999, rrp: 8000 },
-            { date: '2018-12-01', price: 8500, rrp: 8000 },
-            { date: '2019-01-01', price: 7500, rrp: 8000 },
-            { date: '2019-02-01', price: 8000, rrp: 8000 },
-            { date: '2019-03-01', price: 9000, rrp: 8000 },
-            { date: '2019-04-01', price: 11000, rrp: 8000 },
-            { date: '2019-05-01', price: 11250, rrp: 8000 },
-            { date: '2019-06-01', price: 12000, rrp: 8000 },
-            { date: '2019-07-01', price: 12100, rrp: 8000 },
-            { date: '2019-08-01', price: 12200, rrp: 10000 },
-            { date: '2019-09-01', price: 12500, rrp: 10000 },
-            { date: '2019-10-01', price: 15000, rrp: 10000 },
-            { date: '2019-11-01', price: 15500, rrp: 10000 },
-            { date: '2019-12-01', price: 15250, rrp: 10000 },
-            { date: '2020-01-01', price: 15000, rrp: 10000 },
-            { date: '2020-02-01', price: 16000, rrp: 10000 },
-            { date: '2020-03-01', price: 17000, rrp: 10000 },
-            { date: '2020-04-01', price: 18500, rrp: 13500 },
-            { date: '2020-05-01', price: 17500, rrp: 13500 },
-            { date: '2020-06-01', price: 20600, rrp: 13500 },
-        ];
-        cb(data);
-    });
 
     return (
         <div style={{

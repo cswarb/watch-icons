@@ -13,7 +13,7 @@ import { MapAnimation } from '../animations/royal-oak/map';
 import { RrpAnimation } from '../animations/royal-oak/rrp';
 import { SuggestionAnimation } from '../animations/suggestion';
 import { Tooltip } from '../../shared/chart/tooltip';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export const PriceOverTime = ({ priceId }: any) => {
     const price = useSelector(state => selectPriceById(state, priceId));
@@ -41,6 +41,41 @@ export const PriceOverTime = ({ priceId }: any) => {
         //     }
         // });
     };
+
+    const genData: any = () => {
+        return [
+            { date: '2018-06-01', price: 9000, rrp: 8000 },
+            { date: '2018-07-01', price: 8250, rrp: 8000 },
+            { date: '2018-08-01', price: 8500, rrp: 8000 },
+            { date: '2018-09-01', price: 9500, rrp: 8000 },
+            { date: '2018-10-01', price: 7500, rrp: 8000 },
+            { date: '2018-11-01', price: 5999, rrp: 8000 },
+            { date: '2018-12-01', price: 8500, rrp: 8000 },
+            { date: '2019-01-01', price: 7500, rrp: 8000 },
+            { date: '2019-02-01', price: 8000, rrp: 8000 },
+            { date: '2019-03-01', price: 9000, rrp: 8000 },
+            { date: '2019-04-01', price: 11000, rrp: 8000 },
+            { date: '2019-05-01', price: 11250, rrp: 8000 },
+            { date: '2019-06-01', price: 12000, rrp: 8000 },
+            { date: '2019-07-01', price: 12100, rrp: 8000 },
+            { date: '2019-08-01', price: 12200, rrp: 10000 },
+            { date: '2019-09-01', price: 12500, rrp: 10000 },
+            { date: '2019-10-01', price: 15000, rrp: 10000 },
+            { date: '2019-11-01', price: 15500, rrp: 10000 },
+            { date: '2019-12-01', price: 15250, rrp: 10000 },
+            { date: '2020-01-01', price: 15000, rrp: 10000 },
+            { date: '2020-02-01', price: 16000, rrp: 10000 },
+            { date: '2020-03-01', price: 17000, rrp: 10000 },
+            { date: '2020-04-01', price: 18500, rrp: 13500 },
+            { date: '2020-05-01', price: 17500, rrp: 13500 },
+            { date: '2020-06-01', price: Math.random() * 20000, rrp: Math.random() * 20000 },
+        ];
+    };
+
+    const [dt, setDt] = useState(genData());
+    const updateDt = () => {
+        setDt(genData());
+    };
     
     return (
         <div>
@@ -55,7 +90,9 @@ export const PriceOverTime = ({ priceId }: any) => {
                 <select name="" id=""></select>
             </div> */}
 
-            <PriceOverTimeAnimation loadTooltipData={(e: any) => loadTooltipData(e)}>
+            <button type="button" onClick={updateDt.bind(this)}>Update Data</button>
+
+            <PriceOverTimeAnimation data={dt} loadTooltipData={(e: any) => loadTooltipData(e)}>
                 <Tooltip data={tooltipData} />
             </PriceOverTimeAnimation>
 
@@ -152,7 +189,7 @@ export const PriceOverTime = ({ priceId }: any) => {
                     </footer>
                 </section>
 
-                <section className="price-over-time__container">
+                {/* <section className="price-over-time__container">
                     <header className="price-over-time__header">
                         <h3 className="price__title">Model price comparison <span className="price__sub-title">(15202ST)</span></h3>
                         <div className="price__from-to">
@@ -173,11 +210,11 @@ export const PriceOverTime = ({ priceId }: any) => {
                     <footer className="price__chart-container">
                         <ModelsLineAnimation />
                     </footer>
-                </section>
+                </section> */}
 
                 <section className="price-over-time__container">
                     <header className="price-over-time__header">
-                        <h3 className="price__title">Map</h3>
+                        {/* <h3 className="price__title">Map</h3> */}
                      </header>
 
                     <footer className="price__chart-container">

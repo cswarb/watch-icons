@@ -98,23 +98,27 @@ export const Nav = () => {
                 </Link>
 
                 <StyledUl>
-                    <StyledLi>
+                    {/* <StyledLi>
                         <button onClick={() => setDropdownOpen(!dropdownOpen)}>Watches</button>
-                    </StyledLi>
+                    </StyledLi> */}
 
                     {
-                        dropdownOpen && 
-                        <div className="dropdown">
-                            {/* <button onClick={() => setDropdownOpen(false)}>x</button> */}
+                        // dropdownOpen && 
+                        // <div className="dropdown">
+                        //     {/* <button onClick={() => setDropdownOpen(false)}>x</button> */}
 
-                            <div className="dropdown__items">
-                                {watchList}
-                            </div>
-                        </div>
+                        //     <div className="dropdown__items">
+                        //         {watchList}
+                        //     </div>
+                        // </div>
                     }
                 
-                    <StyledLi>
+                    {/* <StyledLi>
                         <Link className="nav__anchor" to="/library" state={{ background: '#FFFFFF', color: '#000000' }}>Technical library</Link>
+                    </StyledLi> */}
+
+                    <StyledLi>
+                        <Link className="nav__anchor" to="/" state={{ background: '#FFFFFF', color: '#000000' }}>Watches</Link>
                     </StyledLi>
 
                     <StyledLi>
