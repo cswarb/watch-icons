@@ -379,10 +379,16 @@ h1,h2,h3,h4,h5,h6 {
     color: #072830;
     font-weight: 600;
     font-size: 4rem;
+
+    /* font-family: 'Barlow Condensed';
+    text-transform: uppercase;
+    font-size: 24rem;
+    font-weight: 500; */
 }
 
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;600;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&display=swap');
 
 * {
     font-family: Poppins;
@@ -997,18 +1003,22 @@ text {
 
 
 .home__watch {
-    font-size: 3.5rem;
-    color: #d7ece4;
+    font-size: 2.5rem;
+    color: #e1e8e9;
     text-decoration: none;
-    font-weight: 800;
+    font-weight: 600;
     margin: 0 1rem 0 0;
     position: relative;
     display: inline;
+    transition: all 0.2s ease-in-out;
+    letter-spacing: -1.5px;
 }
 
+
+
 .home__watch:hover {
-    color: black;
     color: #072930;
+    text-decoration: underline;
 }
 
 .home__watch--inactive {
@@ -1023,8 +1033,13 @@ text {
 }
 
 .home__iterator {
-    font-weight: 800;
-    color: #072930;
+        font-weight: 800;
+        color: #072730;
+        transform: rotate(-40deg);
+        position: relative;
+        display: inline-block;
+        top: -3px;
+        z-index: 1;
 }
 
 .home__link-container {

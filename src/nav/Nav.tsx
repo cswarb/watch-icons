@@ -8,7 +8,7 @@ import { WatchReducerWatch } from '../store/watch/reducer';
 import { Logo } from '../logo/logo';
 
 const StyledNav = styled.nav`
-    margin: 2rem;
+    margin: 2rem 6rem;
     font-weight: 600;
     display: flex;
     justify-content: space-between;
@@ -50,6 +50,7 @@ const StyledLi = styled.li`
 
      a:hover, button:hover {
          cursor: pointer;
+         text-decoration: underline;
      }
 `;
 

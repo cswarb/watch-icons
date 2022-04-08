@@ -22,7 +22,8 @@ export const WatchItem = ({ item, i }: any) => {
                         )}
                         to={`/watch/${watch?._id}`}
                         state={{ background: '#ffffff' || getBackgroundColour(watch.make), color: 'white' }}>
-                        {watch?.make} {watch?.model}
+                        <span>{watch?.make} </span>
+                        <span>{watch?.model}</span>
                     </Link>
                 </div>
     );
